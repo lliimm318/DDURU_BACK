@@ -1,6 +1,6 @@
 package com.huitdduru.madduru.security.auth;
 
-import com.huitdduru.madduru.user.domain.User;
+import com.huitdduru.madduru.user.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

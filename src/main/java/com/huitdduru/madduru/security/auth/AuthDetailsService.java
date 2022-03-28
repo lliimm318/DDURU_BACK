@@ -1,7 +1,7 @@
 package com.huitdduru.madduru.security.auth;
 
 import com.huitdduru.madduru.exception.exceptions.UserNotFoundException;
-import com.huitdduru.madduru.user.domain.repository.UserRepository;
+import com.huitdduru.madduru.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

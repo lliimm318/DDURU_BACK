@@ -1,8 +1,8 @@
 package com.huitdduru.madduru.security.auth;
 
 import com.huitdduru.madduru.exception.exceptions.UserNotFoundException;
-import com.huitdduru.madduru.user.domain.User;
-import com.huitdduru.madduru.user.domain.repository.UserRepository;
+import com.huitdduru.madduru.user.entity.User;
+import com.huitdduru.madduru.user.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

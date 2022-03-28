@@ -1,11 +1,11 @@
-package com.huitdduru.madduru.user.service;
+package com.huitdduru.madduru.email.service;
 
 import com.huitdduru.madduru.exception.exceptions.MailSendException;
 import com.huitdduru.madduru.email.entity.RandomCode;
 import com.huitdduru.madduru.email.repository.RandomCodeRepository;
 import com.huitdduru.madduru.exception.exceptions.VerifyNumNotFoundException;
-import com.huitdduru.madduru.user.payload.request.MailRequest;
-import com.huitdduru.madduru.user.payload.request.RandomRequest;
+import com.huitdduru.madduru.email.payload.request.MailRequest;
+import com.huitdduru.madduru.email.payload.request.RandomRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -54,12 +54,6 @@ public class EmailServiceImpl implements EmailService {
        }
     }
 
-    private String generateRandomCode() {
-        RANDOM.setSeed(System.currentTimeMillis());
-
-        return Integer.toString(RANDOM.nextInt(1000000) % 1000000);
-    }
-
     @Override
     public void randomCode(RandomRequest randomRequest) {
         randomCodeRepository.findByEmail(randomRequest.getEmail())
@@ -67,6 +61,12 @@ public class EmailServiceImpl implements EmailService {
                 .map(RandomCode::isVerifiedTrue)
                 .map(randomCodeRepository::save)
                 .orElseThrow(VerifyNumNotFoundException::new);
+    }
+
+    private String generateRandomCode() {
+        RANDOM.setSeed(System.currentTimeMillis());
+
+        return Integer.toString(RANDOM.nextInt(1000000) % 1000000);
     }
 
 }

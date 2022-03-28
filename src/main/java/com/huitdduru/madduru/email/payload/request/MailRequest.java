@@ -1,4 +1,4 @@
-package com.huitdduru.madduru.user.payload.request;
+package com.huitdduru.madduru.email.payload.request;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

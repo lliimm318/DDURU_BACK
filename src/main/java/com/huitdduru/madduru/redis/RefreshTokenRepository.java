@@ -1,6 +1,5 @@
-package com.huitdduru.madduru.user.domain.repository;
+package com.huitdduru.madduru.redis;
 
-import com.huitdduru.madduru.redis.RefreshToken;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

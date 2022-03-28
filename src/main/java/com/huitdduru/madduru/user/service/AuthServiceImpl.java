@@ -1,15 +1,14 @@
 package com.huitdduru.madduru.user.service;
 
-import com.huitdduru.madduru.exception.exceptions.InvalidTokenException;
-import com.huitdduru.madduru.exception.exceptions.PasswordNotMatchException;
-import com.huitdduru.madduru.exception.exceptions.UserAlreadyException;
-import com.huitdduru.madduru.exception.exceptions.UserNotFoundException;
+import com.huitdduru.madduru.email.entity.RandomCode;
+import com.huitdduru.madduru.exception.exceptions.*;
+import com.huitdduru.madduru.email.repository.RandomCodeRepository;
 import com.huitdduru.madduru.s3.FileUploader;
 import com.huitdduru.madduru.security.TokenProvider;
 import com.huitdduru.madduru.redis.RefreshToken;
-import com.huitdduru.madduru.user.domain.User;
-import com.huitdduru.madduru.user.domain.repository.RefreshTokenRepository;
-import com.huitdduru.madduru.user.domain.repository.UserRepository;
+import com.huitdduru.madduru.user.entity.User;
+import com.huitdduru.madduru.redis.RefreshTokenRepository;
+import com.huitdduru.madduru.user.repository.UserRepository;
 import com.huitdduru.madduru.user.payload.request.AuthRequest;
 import com.huitdduru.madduru.user.payload.request.RegisterRequest;
 import com.huitdduru.madduru.user.payload.response.TokenResponse;
@@ -19,13 +18,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    public final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final RandomCodeRepository randomCodeRepository;
 
     private final FileUploader fileUploader;
 
@@ -37,21 +38,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void register(RegisterRequest registerRequest) throws IOException {
+        randomCodeRepository.findByEmail(registerRequest.getEmail())
+                .filter(RandomCode::isVerified)
+                .orElseThrow(UserNotAccessExcepion::new);
+
         userRepository.findByEmail(registerRequest.getEmail())
                 .ifPresent(user -> {
                     throw new UserAlreadyException();
                 });
 
+        String fileName = UUID.randomUUID().toString();
+        fileUploader.uploadFile(registerRequest.getFile(), fileName);
+
         User user = User.builder()
                 .name(registerRequest.getName())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .isExist(true)
-                .imageName(registerRequest.getEmail())
+                .intro(registerRequest.getIntro())
+                .image_path(fileName)
                 .build();
-
-        String imageName = user.getEmail();
-        fileUploader.uploadFile(registerRequest.getFile(), imageName);
 
         userRepository.save(user);
     }
@@ -59,15 +64,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenResponse auth(AuthRequest authRequest) {
         User user = userRepository.findByEmail(authRequest.getEmail())
+                .filter(u -> passwordEncoder.matches(authRequest.getPassword(), u.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
 
-        if(!passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
-            throw new PasswordNotMatchException();
-        }
-
         RefreshToken refreshToken = RefreshToken.builder()
-                .email(authRequest.getEmail())
-                .refreshToken(tokenProvider.generateRefreshToken(authRequest.getEmail()))
+                .email(user.getEmail())
+                .refreshToken(tokenProvider.generateRefreshToken(user.getEmail()))
                 .ttl(ttl)
                 .build();
 
@@ -83,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponse refreshToken(String token) {
         return refreshTokenRepository.findByRefreshToken(token)
                 .map(refreshToken -> {
-                    String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
+                    String generatedAccessToken = tokenProvider.generateRefreshToken(refreshToken.getEmail());
                     return refreshToken.update(generatedAccessToken, ttl);
                 })
                 .map(refreshTokenRepository::save)

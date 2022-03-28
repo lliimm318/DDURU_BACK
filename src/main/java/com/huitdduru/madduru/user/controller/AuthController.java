@@ -16,7 +16,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    void register(@RequestBody RegisterRequest registerRequest) throws IOException {
+    void register(@ModelAttribute RegisterRequest registerRequest) throws IOException {
         authService.register(registerRequest);
     }
 

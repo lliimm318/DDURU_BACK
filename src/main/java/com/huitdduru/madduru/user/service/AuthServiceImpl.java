@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -30,6 +31,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final FileUploader fileUploader;
 
+    private final static Random RANDOM = new Random();
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
 
@@ -56,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .intro(registerRequest.getIntro())
                 .image_path(fileName)
+                .code(generateRandomCode())
                 .build();
 
         userRepository.save(user);
@@ -94,5 +97,11 @@ public class AuthServiceImpl implements AuthService {
                     return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken());
                 })
                 .orElseThrow(InvalidTokenException::new);
+    }
+
+    private String generateRandomCode() {
+        RANDOM.setSeed(System.currentTimeMillis());
+
+        return Integer.toString(RANDOM.nextInt(1000000) % 1000000);
     }
 }

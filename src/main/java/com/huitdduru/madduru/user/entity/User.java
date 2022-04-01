@@ -1,7 +1,7 @@
 package com.huitdduru.madduru.user.entity;
 
-import com.huitdduru.madduru.diary.entity.ChangeDiary;
 import com.huitdduru.madduru.diary.entity.Diary;
+import com.huitdduru.madduru.diary.entity.DiaryDetail;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,13 +41,17 @@ public class User {
     @Column(name = "is_exist", nullable = false)
     private boolean isExist;
 
-    @OneToMany(mappedBy = "user")
-    private final List<Diary> diaries = new ArrayList<>();
+    @OneToMany(mappedBy = "user1", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Diary> diaries1 = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner")
-    private final List<ChangeDiary> myChangeDiaries = new ArrayList<>();
+    @OneToMany(mappedBy = "user2", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Diary> diaries2 = new ArrayList<>();
 
-    @OneToMany(mappedBy = "receiver")
-    private final List<ChangeDiary> receivedChangeDiaries = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<DiaryDetail> diaryDetails = new ArrayList<>();
+
+    private void changeInfo() {
+
+    }
 
 }

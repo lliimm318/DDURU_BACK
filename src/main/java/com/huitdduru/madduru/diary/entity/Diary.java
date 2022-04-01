@@ -5,8 +5,10 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Table(name = "diary")
+@Table(name = "diary_mate")
 @Entity
 @Getter
 @NoArgsConstructor
@@ -18,23 +20,27 @@ public class Diary {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "title", nullable = false, length = 50)
-    private String title;
-
-    @Column(name = "feeling", nullable = false, length = 1)
-    private String feeling;
-
-    @Column(name = "date")
-    private LocalDateTime date;
-
-    @Column(name = "contents", nullable = false, length = 2000)
-    private String contents;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user1_id", nullable = false)
+    private User user1;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "user2_id", nullable = false)
+    private User user2;
 
-    @Column(name = "image_path")
-    private String image_path;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "finished_at", nullable = false)
+    private LocalDateTime finishedAt;
+
+    @Column(name = "relation_continues", columnDefinition = "TINYINT(1) default 1", nullable = false)
+    private boolean relationContinues;
+
+    @Column(name = "is_mine", columnDefinition = "TINYINT(1) default 0", nullable = false)
+    private boolean isMine;
+
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<DiaryDetail> diaryDetails = new ArrayList<>();
 
 }

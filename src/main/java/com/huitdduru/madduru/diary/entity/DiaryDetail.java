@@ -6,7 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Table(name = "diary")
+@Table(name = "diary_detail")
 @Entity
 @Getter
 @NoArgsConstructor
@@ -34,6 +34,9 @@ public class DiaryDetail {
 
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
+    
+    @Column(name = "create_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @Column(name = "content", nullable = false, length = 2000)
     private String content;

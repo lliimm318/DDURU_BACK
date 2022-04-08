@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "diary_mate")
+@Table(name = "diary")
 @Entity
 @Getter
 @NoArgsConstructor

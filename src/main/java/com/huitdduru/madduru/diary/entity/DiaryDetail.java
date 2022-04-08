@@ -35,7 +35,7 @@ public class DiaryDetail {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
     
-    @Column(name = "create_at", nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "content", nullable = false, length = 2000)

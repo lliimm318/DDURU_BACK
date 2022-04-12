@@ -1,14 +1,15 @@
 package com.huitdduru.madduru.email.payload.request;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Getter
-@RequiredArgsConstructor
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class RandomRequest {
 
-    private final String email;
+    private String email;
 
-    private final String code;
+    private String code;
 
 }

@@ -34,20 +34,19 @@ public class EmailServiceImpl implements EmailService {
                final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
                helper.setFrom("huitddu@gmail.com");
                helper.setTo(mailRequest.getEmail());
-               helper.setSubject("휘뚜루마뚜루 인종 번호는 " + randomCode + "입니다");
-               helper.setText("휘뚜루마뚜루");
+               helper.setText("휘뚜루마뚜루 인증 번호는 " + randomCode + "입니다");
+               helper.setSubject("휘뚜루마뚜루 인증 번호");
            };
            javaMailSender.send(preparator);
 
-           randomCodeRepository.findByEmail(mailRequest.getEmail())
-                   .ifPresent(randomCodeRepository::delete);
-
            RandomCode random = RandomCode.builder()
                    .email(mailRequest.getEmail())
-                   .randomCode(randomCode)
+                   .isVerified(false)
                    .build();
 
+           random.updateCode(randomCode);
            randomCodeRepository.save(random);
+
        } catch (Exception e) {
            e.printStackTrace();
            throw new MailSendException();
@@ -56,11 +55,15 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void randomCode(RandomRequest randomRequest) {
-        randomCodeRepository.findByEmail(randomRequest.getEmail())
-                .filter(randomCode -> randomCode.getRandomCode().equals(randomRequest.getCode()))
-                .map(RandomCode::isVerifiedTrue)
-                .map(randomCodeRepository::save)
+        RandomCode randomCode = randomCodeRepository.findByEmail(randomRequest.getEmail())
                 .orElseThrow(VerifyNumNotFoundException::new);
+
+        if(!randomCode.getRandomCode().equals(randomCode.getRandomCode())) {
+            throw new VerifyNumNotFoundException();
+        }
+
+        randomCode.updateVerified();
+        randomCodeRepository.save(randomCode);
     }
 
     private String generateRandomCode() {

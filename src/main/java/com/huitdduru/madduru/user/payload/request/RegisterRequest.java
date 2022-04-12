@@ -2,7 +2,6 @@ package com.huitdduru.madduru.user.payload.request;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @RequiredArgsConstructor
@@ -12,6 +11,5 @@ public class RegisterRequest {
     private final String email;
     private final String password;
     private final String intro;
-    private final MultipartFile file;
 
 }

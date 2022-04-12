@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Getter
 @Builder
-@RedisHash(value = "random_code", timeToLive = 60 * 3)
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class RandomCode {
@@ -21,9 +22,12 @@ public class RandomCode {
 
     private boolean isVerified;
 
-    public RandomCode isVerifiedTrue() {
+    public void updateVerified() {
         this.isVerified = true;
+    }
 
+    public RandomCode updateCode(String randomCode) {
+        this.randomCode = randomCode;
         return this;
     }
 

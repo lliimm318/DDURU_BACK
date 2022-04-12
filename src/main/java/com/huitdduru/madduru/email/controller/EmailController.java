@@ -18,9 +18,8 @@ public class EmailController {
         emailService.sendMail(mailRequest);
     }
 
-    @PatchMapping
+    @PutMapping
     public void random(@RequestBody RandomRequest randomRequest) {
         emailService.randomCode(randomRequest);
     }
-
 }

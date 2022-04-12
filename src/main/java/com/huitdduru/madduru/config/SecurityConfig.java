@@ -1,14 +1,18 @@
 package com.huitdduru.madduru.config;
 
+import com.huitdduru.madduru.security.TokenConfigure;
 import com.huitdduru.madduru.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -24,7 +28,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .cors().and()
+                .formLogin().disable()
+                .sessionManagement().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                .antMatchers(HttpMethod.PUT, "/auth").permitAll()
+                .antMatchers(HttpMethod.POST, "/email").permitAll()
+                .antMatchers(HttpMethod.PUT, "/email").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .apply(new TokenConfigure(tokenProvider));
+    }
 
+    public void addCorsMappings(CorsRegistry corsRegistry) {
+        corsRegistry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedHeaders("*")
+                .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE");
+
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

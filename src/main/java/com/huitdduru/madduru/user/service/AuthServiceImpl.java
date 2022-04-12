@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Random;
@@ -39,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private Long ttl;
 
     @Override
-    public void register(RegisterRequest registerRequest) throws IOException {
+    public void register(MultipartFile file, RegisterRequest registerRequest) throws IOException {
         randomCodeRepository.findByEmail(registerRequest.getEmail())
                 .filter(RandomCode::isVerified)
                 .orElseThrow(UserNotAccessExcepion::new);
@@ -50,14 +51,15 @@ public class AuthServiceImpl implements AuthService {
                 });
 
         String fileName = UUID.randomUUID().toString();
-        fileUploader.uploadFile(registerRequest.getFile(), fileName);
+        fileUploader.uploadFile(file, fileName);
 
         User user = User.builder()
                 .name(registerRequest.getName())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .isExist(true)
                 .intro(registerRequest.getIntro())
-                .image_path(fileName)
+                .imagePath(fileName)
                 .code(generateRandomCode())
                 .build();
 

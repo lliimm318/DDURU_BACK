@@ -6,6 +6,7 @@ import com.huitdduru.madduru.user.payload.response.TokenResponse;
 import com.huitdduru.madduru.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -16,8 +17,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    void register(@ModelAttribute RegisterRequest registerRequest) throws IOException {
-        authService.register(registerRequest);
+    void register(@RequestPart MultipartFile file,
+                  @RequestPart RegisterRequest registerRequest) throws IOException {
+        authService.register(file, registerRequest);
     }
 
     @PostMapping("/auth")

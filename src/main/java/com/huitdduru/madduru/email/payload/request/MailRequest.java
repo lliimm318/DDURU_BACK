@@ -1,12 +1,16 @@
 package com.huitdduru.madduru.email.payload.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@RequiredArgsConstructor
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class MailRequest {
 
-    private final String email;
+    private String email;
 
 }

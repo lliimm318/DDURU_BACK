@@ -11,6 +11,7 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCHES(404, "password not matches"),
     USER_NOT_FOUND(404,"user not found"),
     EMAIL_CODE_NOT_FOUND(404,"email code not found"),
+    DIARY_NOT_FOUND(404,"diary not found"),
     USER_ALREADY(409, "user already"),
     USER_NOT_ACCESS(500, "user not access"),
     MAIL_SEND_ERROR(500, "email send error");

@@ -32,6 +32,11 @@ public class FileUploaderImpl implements FileUploader {
     }
 
     @Override
+    public void removeFile(String imageName) {
+        removeObject(imageName);
+    }
+
+    @Override
     public File getFile(String imageName) throws IOException {
         return getObject(imageName);
     }

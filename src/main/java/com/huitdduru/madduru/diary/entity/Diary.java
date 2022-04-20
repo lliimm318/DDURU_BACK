@@ -1,4 +1,3 @@
-
 package com.huitdduru.madduru.diary.entity;
 
 import com.huitdduru.madduru.user.entity.User;

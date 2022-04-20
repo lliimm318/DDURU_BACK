@@ -33,7 +33,7 @@ public class User {
     private String intro;
 
     @Column(name = "image_path")
-    private String image_path;
+    private String imagePath;
 
     @Column(name = "code", nullable = false, unique = true, length = 6)
     private String code;

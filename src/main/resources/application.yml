@@ -1,1 +1,42 @@
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DATDBASE_ID:root}
+    password: ${DATABASE_PASSWORD}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GMAIL_ADDRESS}
+    password: ${GMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
 
+auth:
+  jwt:
+    exp:
+        access: ${ACCESS_TOKEN_EXP}
+        refresh: ${REFRESH_TOKEN_EXP}
+    secret: ${SECRET_KEY}
+    header: ${HEADER}
+    prefix: ${PREFIX}
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: ${BUCKET}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}

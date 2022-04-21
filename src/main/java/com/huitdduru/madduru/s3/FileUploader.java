@@ -9,6 +9,8 @@ public interface FileUploader {
 
     String uploadFile(MultipartFile file, String imageName) throws IOException;
 
+    void removeFile(String imageName);
+
     File getFile(String imageName) throws IOException;
 
     String getUrl(String imageName);

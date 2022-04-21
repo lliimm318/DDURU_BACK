@@ -1,7 +1,7 @@
 package com.huitdduru.madduru.mypage.service;
 
 import com.huitdduru.madduru.mypage.payload.request.IntroRequest;
-import com.huitdduru.madduru.mypage.payload.response.DiaryResponse;
+import com.huitdduru.madduru.diary.payload.response.DiaryResponse;
 import com.huitdduru.madduru.mypage.payload.response.MyInfoResponse;
 import org.springframework.web.multipart.MultipartFile;
 

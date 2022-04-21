@@ -45,7 +45,8 @@ public class MyPageServiceImpl implements MyPageService {
 
         String imagePath = image != null ? fileUploader.uploadFile(image, uuid) : null;
 
-        fileUploader.removeFile(user.getImagePath());
+        if(user.getImagePath() != null)
+            fileUploader.removeFile(user.getImagePath());
 
         userRepository.save(user.setImagePath(imagePath));
     }

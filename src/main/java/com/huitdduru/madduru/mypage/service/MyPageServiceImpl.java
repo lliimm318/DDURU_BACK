@@ -62,7 +62,7 @@ public class MyPageServiceImpl implements MyPageService {
         List<Diary> diaryList = diaryRepository.findByUser1OrUser2(user);
         Diary myOwnDiary = diaryRepository.findByUser1AndUser2(user, user);
 
-        diaryList.add(0, myOwnDiary);
+        diaryList.add(0, myOwnDiary);   // 나만의 일기가 리스트의 제일 첫번째에 오게
 
         return diaryList.stream()
                 .map(diary -> {
@@ -70,14 +70,14 @@ public class MyPageServiceImpl implements MyPageService {
 
                     boolean currentUserIsUser1 = user1.equals(user);
 
-                    User owner = currentUserIsUser1 ? user1 : user2,
+                    User currentUser = currentUserIsUser1 ? user1 : user2,
                             mate = !currentUserIsUser1 ? user1 : user2;
 
                     DiaryDetail mostRecentDiaryDetail = diaryDetailRepository.findFirstByDiaryOrderByCreatedAtDesc(diary);
 
                     return DiaryResponse.builder()
                         .diaryId(diary.getId())
-                        .loginUserImg(owner.getImagePath())
+                        .currentUserImg(currentUser.getImagePath())
                         .mateImg(mate.getImagePath())
                         .isMyTurn(mostRecentDiaryDetail != null ?
                                 mostRecentDiaryDetail.getUser().equals(mate) : null)

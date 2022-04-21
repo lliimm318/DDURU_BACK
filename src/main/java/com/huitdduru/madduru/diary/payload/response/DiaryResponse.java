@@ -10,7 +10,7 @@ import lombok.Getter;
 public class DiaryResponse {
     private final Integer diaryId;
 
-    private final String loginUserImg;
+    private final String currentUserImg;
 
     private final String mateImg;
 

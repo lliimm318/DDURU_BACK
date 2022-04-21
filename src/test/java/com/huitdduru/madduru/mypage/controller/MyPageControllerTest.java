@@ -6,8 +6,6 @@ import com.huitdduru.madduru.mypage.payload.request.IntroRequest;
 import com.huitdduru.madduru.security.TokenProvider;
 import com.huitdduru.madduru.user.entity.User;
 import com.huitdduru.madduru.user.repository.UserRepository;
-import lombok.AccessLevel;
-import lombok.Setter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,8 +34,11 @@ class MyPageControllerTest {
 
     User user;
 
-    @Setter(AccessLevel.PROTECTED)
     private String token;
+
+    protected void setToken(String token) {
+        this.token = token;
+    }
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

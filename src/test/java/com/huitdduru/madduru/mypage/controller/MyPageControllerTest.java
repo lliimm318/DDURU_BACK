@@ -1,6 +1,9 @@
 package com.huitdduru.madduru.mypage.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.huitdduru.madduru.diary.entity.Diary;
+import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.exception.exceptions.UserNotAccessExcepion;
 import com.huitdduru.madduru.mypage.payload.request.IntroRequest;
 import com.huitdduru.madduru.security.TokenProvider;
@@ -16,7 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -28,6 +34,8 @@ class MyPageControllerTest {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    DiaryRepository diaryRepository;
 
     @Autowired
     TokenProvider tokenProvider;
@@ -85,7 +93,53 @@ class MyPageControllerTest {
     }
 
     @Test
-    void queryDiaryList() {
+    void queryDiaryList() throws Exception {
+        setToken(tokenProvider.generateAccessToken(user.getEmail()));
+
+        User mate = userRepository.save(User.builder()
+                .name("d.mate")
+                .email("d@d.com")
+                .intro("Im your mate")
+                .password("pass2")
+                .code("ABCDEF")
+                .isExist(true)
+                .build());
+
+        // 일기장 저장
+        saveDiary(mate);
+
+        //나만의 일기
+        diaryRepository.save(Diary.builder()
+                .user1(user)
+                .user2(user)
+                .createdAt(LocalDateTime.now())
+                .finishedAt(LocalDateTime.now())
+                .relationContinues(true)
+                .isMine(true)
+                .build());
+
+        saveDiary(mate);
+
+
+        //나만의 일기가 제일 처음에 오는지 검증
+        mvc.perform(MockMvcRequestBuilders.get("/diary-list")
+                .header("token", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].mateName").value(user.getName()))
+                .andExpect(jsonPath("$[10]").exists());
+    }
+
+    private void saveDiary(User mate) {
+        for (int i = 0; i < 5; i++) {
+            diaryRepository.save(Diary.builder()
+                    .user1(user)
+                    .user2(mate)
+                    .createdAt(LocalDateTime.now())
+                    .finishedAt(LocalDateTime.now())
+                    .relationContinues(true)
+                    .isMine(false)
+                    .build());
+        }
     }
 
     @Test

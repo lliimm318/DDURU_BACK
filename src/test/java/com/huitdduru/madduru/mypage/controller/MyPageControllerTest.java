@@ -1,6 +1,5 @@
 package com.huitdduru.madduru.mypage.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
@@ -126,7 +125,8 @@ class MyPageControllerTest {
                 .header("token", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].mateName").value(user.getName()))
-                .andExpect(jsonPath("$[10]").exists());
+                .andExpect(jsonPath("$[10]").exists())
+                .andExpect(jsonPath("$[11]").doesNotExist());
     }
 
     private void saveDiary(User mate) {

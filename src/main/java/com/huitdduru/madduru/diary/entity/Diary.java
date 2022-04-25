@@ -44,4 +44,9 @@ public class Diary {
     @OneToMany(mappedBy = "diary", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<DiaryDetail> diaryDetails = new ArrayList<>();
 
+    public Diary updateRelation(boolean relationContinues) {
+        this.relationContinues = relationContinues;
+        return this;
+    }
+
 }

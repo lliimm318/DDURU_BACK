@@ -2,7 +2,7 @@ package com.huitdduru.madduru.diary.controller;
 
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
 import com.huitdduru.madduru.diary.payload.response.ChronologyResponse;
-import com.huitdduru.madduru.diary.payload.response.DiaryResponse;
+import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 import com.huitdduru.madduru.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,7 @@ public class DiaryController {
     }
 
     @GetMapping("/{diaryId}/list")
-    public List<DiaryResponse> getDiaryList(@PathVariable int diaryId) {
+    public List<DiaryDetailResponse> getDiaryList(@PathVariable int diaryId) {
         return diaryService.diaryList(diaryId);
     }
 

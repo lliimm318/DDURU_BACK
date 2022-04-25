@@ -4,7 +4,7 @@ import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.entity.DiaryDetail;
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
 import com.huitdduru.madduru.diary.payload.response.ChronologyResponse;
-import com.huitdduru.madduru.diary.payload.response.DiaryResponse;
+import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 import com.huitdduru.madduru.diary.repository.DiaryDetailRepository;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.exception.exceptions.DiaryNotFoundException;
@@ -71,12 +71,12 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public List<DiaryResponse> diaryList(int diaryId) {
+    public List<DiaryDetailResponse> diaryList(int diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(DiaryNotFoundException::new);
 
         return diaryDetailRepository.findByDiaryOrderByCreatedAt(diary).stream()
-                .map(diaryDetail -> DiaryResponse.builder()
+                .map(diaryDetail -> DiaryDetailResponse.builder()
                         .id(diaryDetail.getId())
                         .writer(diaryDetail.getUser().getName())
                         .title(diaryDetail.getTitle())

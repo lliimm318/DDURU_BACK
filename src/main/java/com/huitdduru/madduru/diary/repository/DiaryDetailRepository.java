@@ -12,6 +12,4 @@ public interface DiaryDetailRepository extends JpaRepository<DiaryDetail, Intege
 
     List<DiaryDetail> findByDiaryOrderByCreatedAt(Diary diary);
 
-    List<DiaryDetail> findByDiary(Diary diary);
-
 }

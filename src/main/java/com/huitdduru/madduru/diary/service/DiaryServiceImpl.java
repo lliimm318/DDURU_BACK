@@ -58,16 +58,33 @@ public class DiaryServiceImpl implements DiaryService {
         User user = authenticationFacade.getUser();
 
         List<Diary> diaryList = diaryRepository.findByUser1OrUser2(user);
-
-        Map<String, List<Diary>> map = new HashMap<>();
+        List<ChronologyResponse> responses = new ArrayList<>();
 
         for(Diary d: diaryList) {
             User mate = !d.getUser1().equals(user) ? d.getUser1() : d.getUser2();
 
-            List<Diary> diaries = map.getOrDefault(mate, new ArrayList<>());
+            ChronologyResponse chronologyResponse = new ChronologyResponse();
+            chronologyResponse.setOpponent(mate.getEmail());
+            chronologyResponse.setOpponent(mate.getName());
+            chronologyResponse.setStartDate(d.getCreatedAt());
+            chronologyResponse.setEndDate(d.getFinishedAt());
+            chronologyResponse.setDiaries(new ArrayList<>());
 
+            List<DiaryDetail> detailList = diaryDetailRepository.findByDiaryOrderByCreatedAt(d);
+
+            for (DiaryDetail detail : detailList) {
+                DiaryDetailResponse detailResponse = DiaryDetailResponse.builder()
+                                .id(detail.getId())
+                                .title(detail.getTitle())
+                                .date(detail.getDate().toString())
+                                .writer(detail.getUser().getName())
+                        .build();
+
+                chronologyResponse.getDiaries().add(detailResponse);
+            }
+            responses.add(chronologyResponse);
         }
-        return null;
+        return responses;
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.huitdduru.madduru.email.service;
 
-import com.huitdduru.madduru.exception.exceptions.MailSendException;
 import com.huitdduru.madduru.email.entity.RandomCode;
 import com.huitdduru.madduru.email.repository.RandomCodeRepository;
 import com.huitdduru.madduru.exception.exceptions.VerifyNumNotFoundException;
 import com.huitdduru.madduru.email.payload.request.MailRequest;
 import com.huitdduru.madduru.email.payload.request.RandomRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -24,33 +24,31 @@ public class EmailServiceImpl implements EmailService {
 
     private final RandomCodeRepository randomCodeRepository;
 
+    @Value("${auth.jwt.exp.access}")
+    private Long ttl;
+
     @Transactional
     @Override
     public void sendMail(MailRequest mailRequest) {
        String randomCode = generateRandomCode();
 
-       try {
-           final MimeMessagePreparator preparator = mimeMessage -> {
-               final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-               helper.setFrom("huitddu@gmail.com");
-               helper.setTo(mailRequest.getEmail());
-               helper.setText("휘뚜루마뚜루 인증 번호는 " + randomCode + "입니다");
-               helper.setSubject("휘뚜루마뚜루 인증 번호");
+       final MimeMessagePreparator preparator = mimeMessage -> {
+           final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+           helper.setFrom("huitddu@gmail.com");
+           helper.setTo(mailRequest.getEmail());
+           helper.setText("휘뚜루마뚜루 인증 번호는 " + randomCode + "입니다");
+           helper.setSubject("휘뚜루마뚜루 인증 번호");
            };
-           javaMailSender.send(preparator);
 
-           RandomCode random = RandomCode.builder()
-                   .email(mailRequest.getEmail())
-                   .isVerified(false)
-                   .build();
+       javaMailSender.send(preparator);
 
-           random.updateCode(randomCode);
-           randomCodeRepository.save(random);
+       RandomCode random = RandomCode.builder()
+               .email(mailRequest.getEmail())
+               .isVerified(false)
+               .build();
 
-       } catch (Exception e) {
-           e.printStackTrace();
-           throw new MailSendException();
-       }
+       random.updateCode(randomCode);
+       randomCodeRepository.save(random);
     }
 
     @Override

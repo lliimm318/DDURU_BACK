@@ -5,8 +5,13 @@ spring:
   datasource:
     url: ${DATABASE_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${DATDBASE_ID:root}
+    username: ${DATABASE_ID}
     password: ${DATABASE_PASSWORD}
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: none
   mail:
     host: smtp.gmail.com
     port: 587

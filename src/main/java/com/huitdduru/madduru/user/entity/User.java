@@ -50,8 +50,19 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<DiaryDetail> diaryDetails = new ArrayList<>();
 
-    private void changeInfo() {
+    public User setIntro(String intro) {
+        this.intro = intro;
+        return this;
+    }
 
+    public User setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+        return this;
+    }
+
+    public User unregister() {
+        this.isExist = false;
+        return this;
     }
 
 }

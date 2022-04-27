@@ -24,11 +24,18 @@ public class FileUploaderImpl implements FileUploader {
     public String uploadFile(MultipartFile file, String imageName) throws IOException {
         File uploadFile = change(file);
 
+        //TODO: UUID 생성 여기서 하기
+
         return upload(uploadFile, imageName);
     }
 
     private String upload(File uploadFile, String fileName) {
         return putObject(uploadFile, fileName);
+    }
+
+    @Override
+    public void removeFile(String imageName) {
+        removeObject(imageName);
     }
 
     @Override

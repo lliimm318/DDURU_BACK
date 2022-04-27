@@ -41,7 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/auth").permitAll()
                 .antMatchers(HttpMethod.POST, "/email").permitAll()
                 .antMatchers(HttpMethod.PUT, "/email").permitAll()
-                .antMatchers("/intro", "/unregister", "/profile-image", "/diary-list", "/my-info").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new TokenConfigure(tokenProvider));

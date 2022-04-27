@@ -37,11 +37,3 @@ out/
 .vscode/
 
 *.bat
-
-*.jar
-
-gradlew
-
-settings.gradle
-
-gradle/wrapper/gradle-wrapper.properties

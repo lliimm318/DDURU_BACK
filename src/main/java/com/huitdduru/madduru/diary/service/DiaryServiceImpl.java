@@ -36,8 +36,7 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(DiaryNotFoundException::new);
 
-        String imagePath = UUID.randomUUID().toString();
-        fileUploader.uploadFile(file, imagePath);
+        String image = fileUploader.uploadFile(file);
 
         DiaryDetail diaryDetail = DiaryDetail.builder()
                 .title(diaryRequest.getTitle())
@@ -46,7 +45,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .date(diaryRequest.getDate())
                 .createdAt(LocalDateTime.now())
                 .feeling(diaryRequest.getFeeling())
-                .image_path(imagePath)
+                .image_path(image)
                 .diary(diary)
                  .build();
 
@@ -76,7 +75,7 @@ public class DiaryServiceImpl implements DiaryService {
                 DiaryDetailResponse detailResponse = DiaryDetailResponse.builder()
                                 .id(detail.getId())
                                 .title(detail.getTitle())
-                                .date(detail.getDate().toString())
+                                .date(detail.getDate())
                                 .writer(detail.getUser().getName())
                         .build();
 
@@ -97,7 +96,7 @@ public class DiaryServiceImpl implements DiaryService {
                         .id(diaryDetail.getId())
                         .writer(diaryDetail.getUser().getName())
                         .title(diaryDetail.getTitle())
-                        .date(diaryDetail.getDate().toString())
+                        .date(diaryDetail.getDate())
                         .content(diaryDetail.getContent())
                         .feeling(diaryDetail.getFeeling())
                         .image(fileUploader.getUrl(diaryDetail.getImage_path()))

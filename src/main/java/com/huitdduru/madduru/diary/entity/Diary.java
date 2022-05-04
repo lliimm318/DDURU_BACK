@@ -31,16 +31,18 @@ public class Diary {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "finished_at", nullable = false)
+    @Column(name = "finished_at")
     private LocalDateTime finishedAt;
 
     @Column(name = "relation_continues", columnDefinition = "TINYINT(1) default 1", nullable = false)
     private boolean relationContinues;
 
-    @Column(name = "is_mine", columnDefinition = "TINYINT(1) default 0", nullable = false)
-    private boolean isMine;
-
     @OneToMany(mappedBy = "diary", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<DiaryDetail> diaryDetails = new ArrayList<>();
+
+    public Diary updateRelation(boolean relationContinues) {
+        this.relationContinues = relationContinues;
+        return this;
+    }
 
 }

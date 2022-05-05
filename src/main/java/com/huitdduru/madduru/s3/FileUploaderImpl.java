@@ -22,6 +22,10 @@ public class FileUploaderImpl implements FileUploader {
 
     @Override
     public String uploadFile(MultipartFile file) throws IOException {
+        if (file == null) {
+            return " ";
+        }
+
         File uploadFile = change(file);
         String imagePath = UUID.randomUUID().toString();
 

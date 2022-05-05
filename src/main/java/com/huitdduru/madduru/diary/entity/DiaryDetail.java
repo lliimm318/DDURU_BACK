@@ -4,6 +4,7 @@ import com.huitdduru.madduru.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Table(name = "diary_detail")
@@ -33,9 +34,9 @@ public class DiaryDetail {
     private String feeling;
 
     @Column(name = "date", nullable = false)
-    private LocalDateTime date;
-  
-    @Column(name = "create_at", nullable = false)
+    private LocalDate date;
+
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "content", nullable = false, length = 2000)

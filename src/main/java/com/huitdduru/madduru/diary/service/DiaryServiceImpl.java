@@ -11,7 +11,6 @@ import com.huitdduru.madduru.exception.exceptions.DiaryNotFoundException;
 import com.huitdduru.madduru.s3.FileUploader;
 import com.huitdduru.madduru.security.auth.AuthenticationFacade;
 import com.huitdduru.madduru.user.entity.User;
-import com.huitdduru.madduru.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,6 +50,7 @@ public class DiaryServiceImpl implements DiaryService {
                  .build();
 
         diaryDetailRepository.save(diaryDetail);
+
     }
 
     @Override

@@ -40,10 +40,9 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public void updateProfileImage(MultipartFile image) throws IOException {
-        String uuid = UUID.randomUUID().toString();
         User user = authenticationFacade.getUser();
 
-        String imagePath = image != null ? fileUploader.uploadFile(image, uuid) : null;
+        String imagePath = image != null ? fileUploader.uploadFile(image) : null;
 
         if(user.getImagePath() != null)
             fileUploader.removeFile(user.getImagePath());

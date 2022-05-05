@@ -11,6 +11,7 @@ import com.huitdduru.madduru.exception.exceptions.DiaryNotFoundException;
 import com.huitdduru.madduru.s3.FileUploader;
 import com.huitdduru.madduru.security.auth.AuthenticationFacade;
 import com.huitdduru.madduru.user.entity.User;
+import com.huitdduru.madduru.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,20 +64,17 @@ public class DiaryServiceImpl implements DiaryService {
             User mate = !d.getUser1().equals(user) ? d.getUser1() : d.getUser2();
 
             ChronologyResponse chronologyResponse = new ChronologyResponse();
-            chronologyResponse.setOpponent(mate.getEmail());
-            chronologyResponse.setOpponent(mate.getName());
-            chronologyResponse.setStartDate(d.getCreatedAt());
-            chronologyResponse.setEndDate(d.getFinishedAt());
+            chronologyResponse.setId(d.getId());
             chronologyResponse.setDiaries(new ArrayList<>());
 
             List<DiaryDetail> detailList = diaryDetailRepository.findByDiaryOrderByCreatedAt(d);
 
             for (DiaryDetail detail : detailList) {
                 DiaryDetailResponse detailResponse = DiaryDetailResponse.builder()
-                                .id(detail.getId())
-                                .title(detail.getTitle())
-                                .date(detail.getDate())
-                                .writer(detail.getUser().getName())
+                        .id(detail.getId())
+                        .title(detail.getTitle())
+                        .date(detail.getDate())
+                        .writer(detail.getUser().getName())
                         .build();
 
                 chronologyResponse.getDiaries().add(detailResponse);

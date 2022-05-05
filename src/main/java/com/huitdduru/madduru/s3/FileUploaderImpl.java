@@ -22,9 +22,7 @@ public class FileUploaderImpl implements FileUploader {
 
     @Override
     public String uploadFile(MultipartFile file) throws IOException {
-        if (file == null) {
-            return " ";
-        }
+        if (file==null) return null;
 
         File uploadFile = change(file);
         String imagePath = UUID.randomUUID().toString();
@@ -48,6 +46,8 @@ public class FileUploaderImpl implements FileUploader {
 
     @Override
     public String getUrl(String imageName) {
+        if (imageName==null) return null;
+
         return amazonS3.getUrl(bucket, imageName).toString();
     }
 

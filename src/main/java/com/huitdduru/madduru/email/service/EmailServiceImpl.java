@@ -6,7 +6,6 @@ import com.huitdduru.madduru.exception.exceptions.VerifyNumNotFoundException;
 import com.huitdduru.madduru.email.payload.request.MailRequest;
 import com.huitdduru.madduru.email.payload.request.RandomRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -24,31 +23,32 @@ public class EmailServiceImpl implements EmailService {
 
     private final RandomCodeRepository randomCodeRepository;
 
-    @Value("${auth.jwt.exp.access}")
-    private Long ttl;
-
     @Transactional
     @Override
     public void sendMail(MailRequest mailRequest) {
        String randomCode = generateRandomCode();
 
-       final MimeMessagePreparator preparator = mimeMessage -> {
-           final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-           helper.setFrom("huitddu@gmail.com");
-           helper.setTo(mailRequest.getEmail());
-           helper.setText("휘뚜루마뚜루 인증 번호는 " + randomCode + "입니다");
-           helper.setSubject("휘뚜루마뚜루 인증 번호");
+       try {
+           final MimeMessagePreparator preparator = mimeMessage -> {
+               final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+               helper.setFrom("huitddu@gmail.com");
+               helper.setTo(mailRequest.getEmail());
+               helper.setText("휘뚜루마뚜루 인증 번호는 " + randomCode + "입니다");
+               helper.setSubject("휘뚜루마뚜루 인증 번호");
            };
 
-       javaMailSender.send(preparator);
+           javaMailSender.send(preparator);
 
-       RandomCode random = RandomCode.builder()
-               .email(mailRequest.getEmail())
-               .isVerified(false)
-               .build();
+           RandomCode random = RandomCode.builder()
+                   .email(mailRequest.getEmail())
+                   .isVerified(false)
+                   .build();
 
-       random.updateCode(randomCode);
-       randomCodeRepository.save(random);
+           random.updateCode(randomCode);
+           randomCodeRepository.save(random);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
     }
 
     @Override

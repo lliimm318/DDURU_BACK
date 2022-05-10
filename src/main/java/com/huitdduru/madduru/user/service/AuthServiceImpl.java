@@ -102,7 +102,6 @@ public class AuthServiceImpl implements AuthService {
 
     private String generateRandomCode() {
         RANDOM.setSeed(System.currentTimeMillis());
-
-        return Integer.toString(RANDOM.nextInt(1000000) % 1000000);
+        return Integer.toString(RANDOM.nextInt(1000000));
     }
 }

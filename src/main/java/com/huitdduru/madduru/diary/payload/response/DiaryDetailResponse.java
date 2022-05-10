@@ -1,10 +1,8 @@
 package com.huitdduru.madduru.diary.payload.response;
 
-import com.huitdduru.madduru.diary.entity.DiaryDetail;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

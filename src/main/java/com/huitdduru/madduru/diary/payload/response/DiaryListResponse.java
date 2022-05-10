@@ -2,17 +2,15 @@ package com.huitdduru.madduru.diary.payload.response;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChronologyResponse {
+public class DiaryListResponse {
 
     private Integer id;
-    private DiaryListResponse diary;
+    private ExchangeDiaryResponse diary;
     private Boolean isMine;
 
 }

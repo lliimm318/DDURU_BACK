@@ -3,8 +3,9 @@ package com.huitdduru.madduru.diary.service;
 import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.entity.DiaryDetail;
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
-import com.huitdduru.madduru.diary.payload.response.ChronologyResponse;
+import com.huitdduru.madduru.diary.payload.response.DiaryListResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
+import com.huitdduru.madduru.diary.payload.response.ExchangeDiaryResponse;
 import com.huitdduru.madduru.diary.repository.DiaryDetailRepository;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.exception.exceptions.DiaryNotFoundException;
@@ -54,32 +55,38 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public List<ChronologyResponse> choronology() {
+    public List<DiaryListResponse> choronology() {
         User user = authenticationFacade.getUser();
 
         List<Diary> diaryList = diaryRepository.findByUser1OrUser2(user);
-        List<ChronologyResponse> responses = new ArrayList<>();
+        List<DiaryListResponse> responses = new ArrayList<>();
+        Set<User> userList = new HashSet<>();
 
         for(Diary d: diaryList) {
-            User mate = !d.getUser1().equals(user) ? d.getUser1() : d.getUser2();
+            userList.add(d.getUser1());
+            userList.add(d.getUser2());
+        }
 
-            ChronologyResponse chronologyResponse = new ChronologyResponse();
-            chronologyResponse.setId(d.getId());
-            chronologyResponse.setDiaries(new ArrayList<>());
+        for(User u : userList) {
+            List<DiaryDetail> details = diaryDetailRepository.findByUserOrderByCreatedAt(u);
 
-            List<DiaryDetail> detailList = diaryDetailRepository.findByDiaryOrderByCreatedAt(d);
-
-            for (DiaryDetail detail : detailList) {
-                DiaryDetailResponse detailResponse = DiaryDetailResponse.builder()
-                        .id(detail.getId())
-                        .title(detail.getTitle())
-                        .date(detail.getDate())
-                        .writer(detail.getUser().getName())
+            for (DiaryDetail d : details) {
+                ExchangeDiaryResponse exchangeDiaryResponse = ExchangeDiaryResponse.builder()
+                        .id(d.getId())
+                        .title(d.getTitle())
+                        .writer(d.getUser().getName())
+                        .date(d.getDate())
+                        .createdAt(d.getCreatedAt())
                         .build();
 
-                chronologyResponse.getDiaries().add(detailResponse);
+                DiaryListResponse diaryListResponse = new DiaryListResponse();
+                diaryListResponse.setId(u.getId());
+                diaryListResponse.setDiary(exchangeDiaryResponse);
+                diaryListResponse.setIsMine(false);
+                if (user==u) diaryListResponse.setIsMine(true);
+
+                responses.add(diaryListResponse);
             }
-            responses.add(chronologyResponse);
         }
         return responses;
     }

@@ -12,7 +12,7 @@ import java.util.List;
 public class ChronologyResponse {
 
     private Integer id;
-    private List<DiaryDetailResponse> diaries;
+    private DiaryListResponse diary;
     private Boolean isMine;
 
 }

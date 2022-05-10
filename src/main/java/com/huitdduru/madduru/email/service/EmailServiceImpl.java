@@ -2,6 +2,7 @@ package com.huitdduru.madduru.email.service;
 
 import com.huitdduru.madduru.email.entity.RandomCode;
 import com.huitdduru.madduru.email.repository.RandomCodeRepository;
+import com.huitdduru.madduru.exception.exceptions.EmailNotFormatException;
 import com.huitdduru.madduru.exception.exceptions.VerifyNumNotFoundException;
 import com.huitdduru.madduru.email.payload.request.MailRequest;
 import com.huitdduru.madduru.email.payload.request.RandomRequest;
@@ -12,6 +13,8 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.util.Random;
 
 @Service
@@ -27,6 +30,10 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendMail(MailRequest mailRequest) {
        String randomCode = generateRandomCode();
+
+       if(!isValidEmailAddress(mailRequest.getEmail())) {
+            throw new EmailNotFormatException();
+       }
 
        try {
            final MimeMessagePreparator preparator = mimeMessage -> {
@@ -66,8 +73,18 @@ public class EmailServiceImpl implements EmailService {
 
     private String generateRandomCode() {
         RANDOM.setSeed(System.currentTimeMillis());
+        return Integer.toString(RANDOM.nextInt(1000000));
+    }
 
-        return Integer.toString(RANDOM.nextInt(1000000) % 1000000);
+    private boolean isValidEmailAddress(String email) {
+        boolean result = true;
+        try {
+            InternetAddress emailAddr = new InternetAddress(email);
+            emailAddr.validate();
+        } catch (AddressException ex) {
+            result = false;
+        }
+        return result;
     }
 
 }

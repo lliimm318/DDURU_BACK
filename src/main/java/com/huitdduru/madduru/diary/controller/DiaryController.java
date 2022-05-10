@@ -1,7 +1,7 @@
 package com.huitdduru.madduru.diary.controller;
 
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
-import com.huitdduru.madduru.diary.payload.response.ChronologyResponse;
+import com.huitdduru.madduru.diary.payload.response.DiaryListResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 import com.huitdduru.madduru.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class DiaryController {
     }
 
     @GetMapping("/chronology")
-    public List<ChronologyResponse> getChronology() {
+    public List<DiaryListResponse> getChronology() {
         return diaryService.choronology();
     }
 

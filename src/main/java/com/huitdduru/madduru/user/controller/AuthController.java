@@ -17,7 +17,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    void register(@RequestPart(required = false) MultipartFile file,
+    void register(@RequestPart(value = "file", required = false) MultipartFile file,
                   @RequestPart RegisterRequest registerRequest) throws IOException {
         authService.register(file, registerRequest);
     }

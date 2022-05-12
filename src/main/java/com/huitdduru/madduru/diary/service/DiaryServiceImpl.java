@@ -32,12 +32,9 @@ public class DiaryServiceImpl implements DiaryService {
     private final FileUploader fileUploader;
 
     @Override
-    public void writeDiary(int diaryId, MultipartFile file, DiaryRequest diaryRequest) throws IOException {
-
+    public void writeDiary(int diaryId, DiaryRequest diaryRequest) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(DiaryNotFoundException::new);
-
-        String image = fileUploader.uploadFile(file);
 
         DiaryDetail diaryDetail = DiaryDetail.builder()
                 .title(diaryRequest.getTitle())
@@ -46,12 +43,11 @@ public class DiaryServiceImpl implements DiaryService {
                 .date(diaryRequest.getDate())
                 .createdAt(LocalDateTime.now())
                 .feeling(diaryRequest.getFeeling())
-                .image_path(image)
+                .imagePath(diaryRequest.getImageUrl())
                 .diary(diary)
-                 .build();
+                .build();
 
         diaryDetailRepository.save(diaryDetail);
-
     }
 
     @Override
@@ -104,7 +100,7 @@ public class DiaryServiceImpl implements DiaryService {
                         .date(diaryDetail.getDate())
                         .content(diaryDetail.getContent())
                         .feeling(diaryDetail.getFeeling())
-                        .image(fileUploader.getUrl(diaryDetail.getImage_path()))
+                        .image(diaryDetail.getImagePath())
                         .build())
                 .collect(Collectors.toList());
     }

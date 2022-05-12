@@ -2,7 +2,7 @@ package com.huitdduru.madduru.email.service;
 
 import com.huitdduru.madduru.email.entity.RandomCode;
 import com.huitdduru.madduru.email.repository.RandomCodeRepository;
-import com.huitdduru.madduru.exception.exceptions.EmailNotFormatException;
+import com.huitdduru.madduru.exception.exceptions.NotEmailFormatException;
 import com.huitdduru.madduru.exception.exceptions.VerifyNumNotFoundException;
 import com.huitdduru.madduru.email.payload.request.MailRequest;
 import com.huitdduru.madduru.email.payload.request.RandomRequest;
@@ -31,11 +31,11 @@ public class EmailServiceImpl implements EmailService {
     public void sendMail(MailRequest mailRequest) {
        String randomCode = generateRandomCode();
 
-       if(!isValidEmailAddress(mailRequest.getEmail())) {
-            throw new EmailNotFormatException();
-       }
+        if(!isValidEmailAddress(mailRequest.getEmail())) {
+            throw new NotEmailFormatException();
+        }
 
-       try {
+        try {
            final MimeMessagePreparator preparator = mimeMessage -> {
                final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
                helper.setFrom("huitddu@gmail.com");
@@ -63,7 +63,7 @@ public class EmailServiceImpl implements EmailService {
         RandomCode randomCode = randomCodeRepository.findByEmail(randomRequest.getEmail())
                 .orElseThrow(VerifyNumNotFoundException::new);
 
-        if(!randomCode.getRandomCode().equals(randomCode.getRandomCode())) {
+        if((randomCode.getRandomCode() != randomRequest.getCode())) {
             throw new VerifyNumNotFoundException();
         }
 

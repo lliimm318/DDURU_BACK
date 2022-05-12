@@ -20,7 +20,7 @@ public class DiaryController {
 
     @PostMapping("/{diaryId}")
     public void writeDiary(@PathVariable int diaryId,
-                           @RequestPart(required = false) MultipartFile file,
+                           @RequestPart(value = "file", required = false) MultipartFile file,
                            @RequestPart DiaryRequest diaryRequest) throws IOException {
         diaryService.writeDiary(diaryId, file, diaryRequest);
     }

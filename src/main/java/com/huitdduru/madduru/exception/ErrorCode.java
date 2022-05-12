@@ -13,6 +13,7 @@ public enum ErrorCode {
     EMAIL_CODE_NOT_FOUND(404,"email code not found"),
     DIARY_NOT_FOUND(404,"diary not found"),
     USER_ALREADY(409, "user already"),
+    NOT_MAIL_FORMAT(500, "not email format"),
     USER_NOT_ACCESS(500, "user not access"),
     MAIL_SEND_ERROR(500, "email send error");
 

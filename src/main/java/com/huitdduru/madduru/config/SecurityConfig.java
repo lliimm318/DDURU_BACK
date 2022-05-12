@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/auth").permitAll()
                 .antMatchers(HttpMethod.POST, "/email").permitAll()
                 .antMatchers(HttpMethod.PUT, "/email").permitAll()
+                .antMatchers(HttpMethod.POST, "/image").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new TokenConfigure(tokenProvider));

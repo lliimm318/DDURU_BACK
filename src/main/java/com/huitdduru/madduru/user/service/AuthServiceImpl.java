@@ -50,8 +50,7 @@ public class AuthServiceImpl implements AuthService {
                     throw new UserAlreadyException();
                 });
 
-        String fileName = UUID.randomUUID().toString();
-        fileUploader.uploadFile(file, fileName);
+        String image = fileUploader.uploadFile(file);
 
         User user = User.builder()
                 .name(registerRequest.getName())
@@ -59,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .isExist(true)
                 .intro(registerRequest.getIntro())
-                .imagePath(fileName)
+                .imagePath(image)
                 .code(generateRandomCode())
                 .build();
 
@@ -103,7 +102,6 @@ public class AuthServiceImpl implements AuthService {
 
     private String generateRandomCode() {
         RANDOM.setSeed(System.currentTimeMillis());
-
-        return Integer.toString(RANDOM.nextInt(1000000) % 1000000);
+        return Integer.toString(RANDOM.nextInt(1000000));
     }
 }

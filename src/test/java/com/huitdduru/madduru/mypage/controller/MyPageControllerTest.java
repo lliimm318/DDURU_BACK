@@ -114,7 +114,6 @@ class MyPageControllerTest {
                 .createdAt(LocalDateTime.now())
                 .finishedAt(LocalDateTime.now())
                 .relationContinues(true)
-                .isMine(true)
                 .build());
 
         saveDiary(mate);
@@ -137,7 +136,6 @@ class MyPageControllerTest {
                     .createdAt(LocalDateTime.now())
                     .finishedAt(LocalDateTime.now())
                     .relationContinues(true)
-                    .isMine(false)
                     .build());
         }
     }

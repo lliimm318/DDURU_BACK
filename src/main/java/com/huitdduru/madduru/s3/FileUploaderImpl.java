@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,14 +20,14 @@ public class FileUploaderImpl implements FileUploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-
     @Override
-    public String uploadFile(MultipartFile file, String imageName) throws IOException {
+    public String uploadFile(MultipartFile file) throws IOException {
+        if (file==null) return null;
+
         File uploadFile = change(file);
+        String imagePath = UUID.randomUUID().toString();
 
-        //TODO: UUID 생성 여기서 하기
-
-        return upload(uploadFile, imageName);
+        return upload(uploadFile, imagePath);
     }
 
     private String upload(File uploadFile, String fileName) {
@@ -45,6 +46,8 @@ public class FileUploaderImpl implements FileUploader {
 
     @Override
     public String getUrl(String imageName) {
+        if (imageName==null) return null;
+
         return amazonS3.getUrl(bucket, imageName).toString();
     }
 

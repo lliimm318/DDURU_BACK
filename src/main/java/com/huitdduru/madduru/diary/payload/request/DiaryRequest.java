@@ -2,9 +2,8 @@ package com.huitdduru.madduru.diary.payload.request;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @RequiredArgsConstructor
@@ -14,10 +13,8 @@ public class DiaryRequest {
 
     private final String feeling;
 
-    private final LocalDateTime date;
+    private final LocalDate date;
 
     private final String contents;
-
-    private final MultipartFile image;
 
 }

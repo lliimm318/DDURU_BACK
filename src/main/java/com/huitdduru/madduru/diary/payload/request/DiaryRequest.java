@@ -17,4 +17,6 @@ public class DiaryRequest {
 
     private final String contents;
 
+    private final String imageUrl;
+
 }

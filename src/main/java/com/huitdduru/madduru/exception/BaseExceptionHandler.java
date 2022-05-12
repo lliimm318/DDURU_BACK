@@ -17,4 +17,11 @@ public class BaseExceptionHandler {
                 HttpStatus.valueOf(errorCode.getStatus()));
     }
 
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponse> exceptionHandle(final Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>(new ErrorResponse(500, "server error"),
+                HttpStatus.valueOf(500));
+    }
+
 }

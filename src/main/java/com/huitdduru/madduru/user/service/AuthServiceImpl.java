@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private Long ttl;
 
     @Override
-    public void register(MultipartFile file, RegisterRequest registerRequest) throws IOException {
+    public void register(RegisterRequest registerRequest) {
         randomCodeRepository.findByEmail(registerRequest.getEmail())
                 .filter(RandomCode::isVerified)
                 .orElseThrow(UserNotAccessExcepion::new);
@@ -50,16 +49,14 @@ public class AuthServiceImpl implements AuthService {
                     throw new UserAlreadyException();
                 });
 
-        String image = fileUploader.uploadFile(file);
-
         User user = User.builder()
                 .name(registerRequest.getName())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .isExist(true)
                 .intro(registerRequest.getIntro())
-                .imagePath(image)
                 .code(generateRandomCode())
+                .imagePath(registerRequest.getImageUrl())
                 .build();
 
         userRepository.save(user);
@@ -98,6 +95,11 @@ public class AuthServiceImpl implements AuthService {
                     return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken());
                 })
                 .orElseThrow(InvalidTokenException::new);
+    }
+
+    @Override
+    public String uploadImage(MultipartFile file) throws IOException {
+        return fileUploader.uploadFile(file);
     }
 
     private String generateRandomCode() {

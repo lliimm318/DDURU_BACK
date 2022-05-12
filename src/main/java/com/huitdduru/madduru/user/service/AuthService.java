@@ -9,10 +9,12 @@ import java.io.IOException;
 
 public interface AuthService {
 
-    void register(MultipartFile file, RegisterRequest registerRequest) throws IOException;
+    void register(RegisterRequest registerRequest);
 
     TokenResponse auth(AuthRequest authRequest);
 
     TokenResponse refreshToken(String token);
+
+    String uploadImage(MultipartFile file) throws IOException;
 
 }

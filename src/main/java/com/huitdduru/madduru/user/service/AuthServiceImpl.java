@@ -8,6 +8,7 @@ import com.huitdduru.madduru.security.TokenProvider;
 import com.huitdduru.madduru.redis.RefreshToken;
 import com.huitdduru.madduru.user.entity.User;
 import com.huitdduru.madduru.redis.RefreshTokenRepository;
+import com.huitdduru.madduru.user.payload.response.ImageResponse;
 import com.huitdduru.madduru.user.repository.UserRepository;
 import com.huitdduru.madduru.user.payload.request.AuthRequest;
 import com.huitdduru.madduru.user.payload.request.RegisterRequest;
@@ -98,8 +99,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String uploadImage(MultipartFile file) throws IOException {
-        return fileUploader.uploadFile(file);
+    public ImageResponse uploadImage(MultipartFile file) throws IOException {
+        return ImageResponse.builder()
+                .imageUrl(fileUploader.uploadFile(file))
+                .build();
     }
 
     private String generateRandomCode() {

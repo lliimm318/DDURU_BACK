@@ -2,6 +2,7 @@ package com.huitdduru.madduru.user.service;
 
 import com.huitdduru.madduru.user.payload.request.AuthRequest;
 import com.huitdduru.madduru.user.payload.request.RegisterRequest;
+import com.huitdduru.madduru.user.payload.response.ImageResponse;
 import com.huitdduru.madduru.user.payload.response.TokenResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +16,6 @@ public interface AuthService {
 
     TokenResponse refreshToken(String token);
 
-    String uploadImage(MultipartFile file) throws IOException;
+    ImageResponse uploadImage(MultipartFile file) throws IOException;
 
 }

@@ -2,6 +2,7 @@ package com.huitdduru.madduru.user.controller;
 
 import com.huitdduru.madduru.user.payload.request.AuthRequest;
 import com.huitdduru.madduru.user.payload.request.RegisterRequest;
+import com.huitdduru.madduru.user.payload.response.ImageResponse;
 import com.huitdduru.madduru.user.payload.response.TokenResponse;
 import com.huitdduru.madduru.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/image")
-    String imageUpload(@ModelAttribute @Validated MultipartFile file) throws IOException {
+    ImageResponse imageUpload(@ModelAttribute @Validated MultipartFile file) throws IOException {
         return authService.uploadImage(file);
     }
 

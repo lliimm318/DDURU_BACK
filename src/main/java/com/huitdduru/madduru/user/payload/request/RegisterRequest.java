@@ -11,5 +11,6 @@ public class RegisterRequest {
     private final String email;
     private final String password;
     private final String intro;
+    private final String imageUrl;
 
 }

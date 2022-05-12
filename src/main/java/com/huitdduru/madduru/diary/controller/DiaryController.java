@@ -6,7 +6,6 @@ import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 import com.huitdduru.madduru.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,9 +19,8 @@ public class DiaryController {
 
     @PostMapping("/{diaryId}")
     public void writeDiary(@PathVariable int diaryId,
-                           @RequestPart(value = "file", required = false) MultipartFile file,
-                           @RequestPart DiaryRequest diaryRequest) throws IOException {
-        diaryService.writeDiary(diaryId, file, diaryRequest);
+                           @RequestBody DiaryRequest diaryRequest) {
+        diaryService.writeDiary(diaryId, diaryRequest);
     }
 
     @GetMapping("/chronology")

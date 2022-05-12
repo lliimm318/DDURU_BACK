@@ -63,7 +63,7 @@ public class EmailServiceImpl implements EmailService {
         RandomCode randomCode = randomCodeRepository.findByEmail(randomRequest.getEmail())
                 .orElseThrow(VerifyNumNotFoundException::new);
 
-        if((randomCode.getRandomCode() != randomRequest.getCode())) {
+        if(!randomCode.getRandomCode().equals(randomRequest.getCode())) {
             throw new VerifyNumNotFoundException();
         }
 

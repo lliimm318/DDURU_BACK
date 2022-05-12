@@ -84,14 +84,6 @@ class MyPageControllerTest {
     }
 
     @Test
-    void updateProfileImage() {
-    }
-
-    @Test
-    void unregister() {
-    }
-
-    @Test
     void queryDiaryList() throws Exception {
         setToken(tokenProvider.generateAccessToken(user.getEmail()));
 
@@ -140,7 +132,4 @@ class MyPageControllerTest {
         }
     }
 
-    @Test
-    void queryMyInfo() {
-    }
 }

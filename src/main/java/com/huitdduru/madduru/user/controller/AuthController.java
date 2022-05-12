@@ -5,6 +5,7 @@ import com.huitdduru.madduru.user.payload.request.RegisterRequest;
 import com.huitdduru.madduru.user.payload.response.TokenResponse;
 import com.huitdduru.madduru.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +18,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    void register(@RequestPart(value = "file", required = false) MultipartFile file,
-                  @RequestPart RegisterRequest registerRequest) throws IOException {
-        authService.register(file, registerRequest);
+    void register(@RequestBody RegisterRequest registerRequest) {
+        authService.register(registerRequest);
     }
 
     @PostMapping("/auth")
@@ -30,6 +30,11 @@ public class AuthController {
     @PutMapping("/auth")
     TokenResponse refresh(@RequestHeader("refresh-token") String refreshToken) {
         return authService.refreshToken(refreshToken);
+    }
+
+    @PostMapping("/image")
+    String imageUpload(@ModelAttribute @Validated MultipartFile file) throws IOException {
+        return authService.uploadImage(file);
     }
 
 }

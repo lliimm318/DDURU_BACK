@@ -43,6 +43,6 @@ public class DiaryDetail {
     private String content;
 
     @Column(name = "image_path")
-    private String image_path;
+    private String imagePath;
 
 }

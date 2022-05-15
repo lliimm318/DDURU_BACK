@@ -3,9 +3,11 @@ package com.huitdduru.madduru.email.service;
 import com.huitdduru.madduru.email.entity.RandomCode;
 import com.huitdduru.madduru.email.repository.RandomCodeRepository;
 import com.huitdduru.madduru.exception.exceptions.NotEmailFormatException;
+import com.huitdduru.madduru.exception.exceptions.UserAlreadyException;
 import com.huitdduru.madduru.exception.exceptions.VerifyNumNotFoundException;
 import com.huitdduru.madduru.email.payload.request.MailRequest;
 import com.huitdduru.madduru.email.payload.request.RandomRequest;
+import com.huitdduru.madduru.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -25,11 +27,17 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
 
     private final RandomCodeRepository randomCodeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     @Override
     public void sendMail(MailRequest mailRequest) {
-       String randomCode = generateRandomCode();
+        userRepository.findByEmail(mailRequest.getEmail())
+                .ifPresent(user -> {
+                    throw new UserAlreadyException();
+                });
+
+        String randomCode = generateRandomCode();
 
         if(!isValidEmailAddress(mailRequest.getEmail())) {
             throw new NotEmailFormatException();

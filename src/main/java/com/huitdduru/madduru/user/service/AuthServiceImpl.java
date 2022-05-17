@@ -1,5 +1,7 @@
 package com.huitdduru.madduru.user.service;
 
+import com.huitdduru.madduru.diary.entity.Diary;
+import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.email.entity.RandomCode;
 import com.huitdduru.madduru.exception.exceptions.*;
 import com.huitdduru.madduru.email.repository.RandomCodeRepository;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -27,6 +30,7 @@ import java.util.Random;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final DiaryRepository diaryRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final RandomCodeRepository randomCodeRepository;
 
@@ -61,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         userRepository.save(user);
+        myDiary(user);
     }
 
     @Override
@@ -109,4 +114,15 @@ public class AuthServiceImpl implements AuthService {
         RANDOM.setSeed(System.currentTimeMillis());
         return Integer.toString(RANDOM.nextInt(1000000));
     }
+
+    private void myDiary(User user) {
+        Diary diary = Diary.builder()
+                .user1(user)
+                .user2(user)
+                .createdAt(LocalDateTime.now())
+                .relationContinues(true)
+                .build();
+        diaryRepository.save(diary);
+    }
+
 }

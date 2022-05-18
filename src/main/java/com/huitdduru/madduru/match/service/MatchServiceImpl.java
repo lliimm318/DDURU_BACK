@@ -28,8 +28,6 @@ public class MatchServiceImpl implements MatchService {
 
         User opponent = diary.getUser1() == user ? diary.getUser2() : diary.getUser1();
 
-        System.out.println(opponent.getName());
-
         return MatchUserResponse.builder()
                 .me(user.getName())
                 .myImage(user.getImagePath())

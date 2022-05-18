@@ -1,6 +1,7 @@
 package com.huitdduru.madduru.diary.service;
 
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
+import com.huitdduru.madduru.diary.payload.response.DetailListResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryListResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 
@@ -12,6 +13,6 @@ public interface DiaryService {
 
     List<DiaryListResponse> choronology();
 
-    List<DiaryDetailResponse> diaryList(int diaryId);
+    DetailListResponse diaryList(int diaryId);
 
 }

@@ -1,6 +1,7 @@
 package com.huitdduru.madduru.diary.controller;
 
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
+import com.huitdduru.madduru.diary.payload.response.DetailListResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryListResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 import com.huitdduru.madduru.diary.service.DiaryService;
@@ -29,7 +30,7 @@ public class DiaryController {
     }
 
     @GetMapping("/{diaryId}/list")
-    public List<DiaryDetailResponse> getDiaryList(@PathVariable int diaryId) {
+    public DetailListResponse getDiaryList(@PathVariable int diaryId) {
         return diaryService.diaryList(diaryId);
     }
 

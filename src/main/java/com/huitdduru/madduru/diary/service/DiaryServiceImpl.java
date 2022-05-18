@@ -3,6 +3,7 @@ package com.huitdduru.madduru.diary.service;
 import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.entity.DiaryDetail;
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
+import com.huitdduru.madduru.diary.payload.response.DetailListResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryListResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 import com.huitdduru.madduru.diary.payload.response.ExchangeDiaryResponse;
@@ -29,7 +30,6 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryDetailRepository diaryDetailRepository;
 
     private final AuthenticationFacade authenticationFacade;
-    private final FileUploader fileUploader;
 
     @Override
     public void writeDiary(int diaryId, DiaryRequest diaryRequest) {
@@ -88,20 +88,34 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public List<DiaryDetailResponse> diaryList(int diaryId) {
+    public DetailListResponse diaryList(int diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(DiaryNotFoundException::new);
 
-        return diaryDetailRepository.findByDiaryOrderByCreatedAt(diary).stream()
-                .map(diaryDetail -> DiaryDetailResponse.builder()
-                        .id(diaryDetail.getId())
-                        .writer(diaryDetail.getUser().getName())
-                        .title(diaryDetail.getTitle())
-                        .date(diaryDetail.getDate())
-                        .content(diaryDetail.getContent())
-                        .feeling(diaryDetail.getFeeling())
-                        .image(diaryDetail.getImagePath())
-                        .build())
-                .collect(Collectors.toList());
+        User user = authenticationFacade.getUser();
+        User opponent = diary.getUser1() == user ? diary.getUser2() : diary.getUser1();
+
+        List<DiaryDetail> diaryDetail = diaryDetailRepository.findByDiaryOrderByCreatedAt(diary);
+
+        List<DiaryDetailResponse> responses = new ArrayList<>();
+        DetailListResponse detailListResponse = new DetailListResponse();
+        detailListResponse.setMatchedUserName(opponent.getName());
+
+        for (DiaryDetail d : diaryDetail) {
+            DiaryDetailResponse detailResponse = DiaryDetailResponse.builder()
+                    .id(d.getId())
+                    .writer(d.getUser().getName())
+                    .title(d.getTitle())
+                    .date(d.getDate())
+                    .content(d.getContent())
+                    .feeling(d.getFeeling())
+                    .image(d.getImagePath())
+                    .build();
+
+            responses.add(detailResponse);
+        }
+        detailListResponse.setList(responses);
+
+        return detailListResponse;
     }
 }

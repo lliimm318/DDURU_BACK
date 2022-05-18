@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MatchUserResponse {
 
-    private String user1;
-    private String user2;
-    private String userImage1;
-    private String userImage2;
+    private String me;
+    private String opponent;
+    private String myImage;
+    private String opponentImage;
 
 }

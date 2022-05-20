@@ -1,14 +1,13 @@
 package com.huitdduru.madduru.diary.controller;
 
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
+import com.huitdduru.madduru.diary.payload.response.CalendarResponse;
 import com.huitdduru.madduru.diary.payload.response.DetailListResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryListResponse;
-import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 import com.huitdduru.madduru.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,6 +31,12 @@ public class DiaryController {
     @GetMapping("/{diaryId}/list")
     public DetailListResponse getDiaryList(@PathVariable int diaryId) {
         return diaryService.diaryList(diaryId);
+    }
+
+    @GetMapping("/calendar/{year}/{month}")
+    public List<CalendarResponse> calendar(@PathVariable int year,
+                                           @PathVariable int month) {
+        return diaryService.diaryCalendar(year, month);
     }
 
 }

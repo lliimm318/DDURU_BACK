@@ -2,8 +2,6 @@ package com.huitdduru.madduru.diary.payload.response;
 
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @Builder
@@ -16,7 +14,7 @@ public class DiaryDetailResponse {
     private String feeling;
     private String image;
     private String content;
-    private LocalDate date;
+    private String date;
     private String writer;
 
 }

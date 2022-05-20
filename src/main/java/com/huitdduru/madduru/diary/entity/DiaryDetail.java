@@ -34,7 +34,7 @@ public class DiaryDetail {
     private String feeling;
 
     @Column(name = "date", nullable = false)
-    private LocalDate date;
+    private String date;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

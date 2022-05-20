@@ -3,24 +3,18 @@ package com.huitdduru.madduru.diary.service;
 import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.entity.DiaryDetail;
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
-import com.huitdduru.madduru.diary.payload.response.DetailListResponse;
-import com.huitdduru.madduru.diary.payload.response.DiaryListResponse;
-import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
-import com.huitdduru.madduru.diary.payload.response.ExchangeDiaryResponse;
+import com.huitdduru.madduru.diary.payload.response.*;
 import com.huitdduru.madduru.diary.repository.DiaryDetailRepository;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.exception.exceptions.DiaryNotFoundException;
-import com.huitdduru.madduru.s3.FileUploader;
 import com.huitdduru.madduru.security.auth.AuthenticationFacade;
 import com.huitdduru.madduru.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
+
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +34,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .title(diaryRequest.getTitle())
                 .content(diaryRequest.getContents())
                 .user(authenticationFacade.getUser())
-                .date(diaryRequest.getDate())
+                .date(diaryRequest.getDate().toString())
                 .createdAt(LocalDateTime.now())
                 .feeling(diaryRequest.getFeeling())
                 .imagePath(diaryRequest.getImageUrl())
@@ -117,5 +111,31 @@ public class DiaryServiceImpl implements DiaryService {
         detailListResponse.setList(responses);
 
         return detailListResponse;
+    }
+
+    @Override
+    public List<CalendarResponse> diaryCalendar(int year, int month) {
+        User user = authenticationFacade.getUser();
+        String monthString = month < 10 ? "0" + month : month+"";
+
+        List<CalendarResponse> calendarResponses = new ArrayList<>();
+
+        List<DiaryDetail> diaries = diaryDetailRepository.findByDateContainsOrderByDate(year + "-"+ monthString);
+
+        for (DiaryDetail d : diaries) {
+            Boolean isMine = user == d.getUser();
+
+            CalendarResponse response = CalendarResponse.builder()
+                    .id(d.getId())
+                    .title(d.getTitle())
+                    .date(d.getDate())
+                    .writer(d.getUser().getName())
+                    .imageUrl(d.getImagePath())
+                    .isMine(isMine)
+                    .build();
+
+            calendarResponses.add(response);
+        }
+        return calendarResponses;
     }
 }

@@ -4,21 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 @AllArgsConstructor
-public class ExchangeDiaryResponse {
+public class CalendarResponse {
 
     private final Integer id;
 
     private final String title;
 
-    private final String writer;
-
     private final String date;
 
-    private final LocalDateTime createdAt;
+    private final String writer;
+
+    private final String imageUrl;
+
+    private final Boolean isMine;
 
 }

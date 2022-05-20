@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,7 +17,7 @@ public class ExchangeDiaryResponse {
 
     private final String writer;
 
-    private final LocalDate date;
+    private final String date;
 
     private final LocalDateTime createdAt;
 

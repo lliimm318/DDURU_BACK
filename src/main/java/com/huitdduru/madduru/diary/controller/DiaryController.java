@@ -1,8 +1,8 @@
 package com.huitdduru.madduru.diary.controller;
 
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
-import com.huitdduru.madduru.diary.payload.response.CalendarResponse;
 import com.huitdduru.madduru.diary.payload.response.DetailListResponse;
+import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryListResponse;
 import com.huitdduru.madduru.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +33,9 @@ public class DiaryController {
         return diaryService.diaryList(diaryId);
     }
 
-    @GetMapping("/calendar/{year}/{month}")
-    public List<CalendarResponse> calendar(@PathVariable int year,
-                                           @PathVariable int month) {
-        return diaryService.diaryCalendar(year, month);
+    @GetMapping("/{diaryDetailId}")
+    public DiaryDetailResponse getDetail(@PathVariable int diaryDetailId) {
+        return diaryService.diaryDetail(diaryDetailId);
     }
 
 }

@@ -114,28 +114,18 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public List<CalendarResponse> diaryCalendar(int year, int month) {
-        User user = authenticationFacade.getUser();
-        String monthString = month < 10 ? "0" + month : month+"";
+    public DiaryDetailResponse diaryDetail(int diaryId) {
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(diaryId)
+                .orElseThrow(DiaryNotFoundException::new);
 
-        List<CalendarResponse> calendarResponses = new ArrayList<>();
-
-        List<DiaryDetail> diaries = diaryDetailRepository.findByDateContainsOrderByDate(year + "-"+ monthString);
-
-        for (DiaryDetail d : diaries) {
-            Boolean isMine = user == d.getUser();
-
-            CalendarResponse response = CalendarResponse.builder()
-                    .id(d.getId())
-                    .title(d.getTitle())
-                    .date(d.getDate())
-                    .writer(d.getUser().getName())
-                    .imageUrl(d.getImagePath())
-                    .isMine(isMine)
-                    .build();
-
-            calendarResponses.add(response);
-        }
-        return calendarResponses;
+        return DiaryDetailResponse.builder()
+                .id(diaryDetail.getId())
+                .writer(diaryDetail.getUser().getName())
+                .title(diaryDetail.getTitle())
+                .date(diaryDetail.getDate())
+                .content(diaryDetail.getContent())
+                .feeling(diaryDetail.getFeeling())
+                .image(diaryDetail.getImagePath())
+                .build();
     }
 }

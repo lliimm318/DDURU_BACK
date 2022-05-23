@@ -1,8 +1,8 @@
 package com.huitdduru.madduru.diary.service;
 
 import com.huitdduru.madduru.diary.payload.request.DiaryRequest;
-import com.huitdduru.madduru.diary.payload.response.CalendarResponse;
 import com.huitdduru.madduru.diary.payload.response.DetailListResponse;
+import com.huitdduru.madduru.diary.payload.response.DiaryDetailResponse;
 import com.huitdduru.madduru.diary.payload.response.DiaryListResponse;
 
 import java.util.List;
@@ -15,6 +15,6 @@ public interface DiaryService {
 
     DetailListResponse diaryList(int diaryId);
 
-    List<CalendarResponse> diaryCalendar(int year, int month);
+    DiaryDetailResponse diaryDetail(int diaryId);
 
 }

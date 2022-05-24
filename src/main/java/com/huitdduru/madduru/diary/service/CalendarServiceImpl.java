@@ -1,22 +1,24 @@
 package com.huitdduru.madduru.diary.service;
 
+import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.entity.DiaryDetail;
 import com.huitdduru.madduru.diary.payload.response.CalendarCountResponse;
 import com.huitdduru.madduru.diary.payload.response.CalendarResponse;
 import com.huitdduru.madduru.diary.repository.DiaryDetailRepository;
+import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.security.auth.AuthenticationFacade;
 import com.huitdduru.madduru.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CalendarServiceImpl implements CalendarService {
 
     private final DiaryDetailRepository diaryDetailRepository;
+    private final DiaryRepository diaryRepository;
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -25,7 +27,15 @@ public class CalendarServiceImpl implements CalendarService {
         String monthString = month < 10 ? "0" + month : month + "";
         String date = year + "-" + monthString;
 
-        List<DiaryDetail> details = diaryDetailRepository.findByDateContainsOrderByDate(date);
+        User user = authenticationFacade.getUser();
+
+        List<Diary> diaryList = diaryList(user);
+        List<DiaryDetail> detailList = new ArrayList<>();
+
+        for (Diary d : diaryList) {
+            detailList.addAll(diaryDetailRepository.findByDiaryAndDateContainsOrderByDate(d, date));
+        }
+
         List<CalendarCountResponse> calendarList = new ArrayList<>();
 
         Map<String, Integer> calMap = new LinkedHashMap<>();
@@ -35,8 +45,8 @@ public class CalendarServiceImpl implements CalendarService {
             calMap.put(s, 0);
         }
 
-        for (DiaryDetail d : details) {
-            calMap.put(d.getDate(), calMap.getOrDefault(d.getDate(), 0)+1);
+        for (DiaryDetail d : detailList) {
+            calMap.put(date(d.getDate()), calMap.getOrDefault(date(d.getDate()), 0)+1);
         }
 
         for (String key : calMap.keySet()) {
@@ -52,12 +62,18 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public List<CalendarResponse> diaryCalendar(String date) {
-        List<DiaryDetail> details = diaryDetailRepository.findByDateOrderByDate(date);
         List<CalendarResponse> calendarResponses = new ArrayList<>();
 
         User user = authenticationFacade.getUser();
 
-        for (DiaryDetail d : details) {
+        List<Diary> diaryList = diaryList(user);
+        List<DiaryDetail> detailList = new ArrayList<>();
+
+        for (Diary d : diaryList) {
+            detailList.addAll(diaryDetailRepository.findByDateOrderByDate(date));
+        }
+
+        for (DiaryDetail d : detailList) {
             Boolean isMine = user == d.getUser();
 
             CalendarResponse response = CalendarResponse.builder()
@@ -80,17 +96,28 @@ public class CalendarServiceImpl implements CalendarService {
         calendar.set(Calendar.MONTH, month);
 
         List<String> cal = new ArrayList<>();
-
-        String monthString = month < 10 ? "0" + month : month + "";
         int max = calendar.getActualMaximum(Calendar.DATE);
 
         for (int i = 1; i <= max+1; i++) {
-            String date = year + "-" + monthString;
-            if (i < 10) date += "-" + 0 + i;
-            else date += "-" + i;
-
+            String date = year + "-" + month + "-" + i;
             cal.add(date);
         }
         return cal;
+    }
+
+    private String date(String date) {
+        String[] d = date.split("-");
+
+        if(d[1].charAt(0) == '0') d[1] = d[1].substring(1);
+        if(d[2].charAt(0) == '0') d[2] = d[2].substring(1);
+
+        return d[0] + "-" + d[1] + "-" + d[2];
+    }
+
+    private List<Diary> diaryList(User user) {
+        List<Diary> diaryList = diaryRepository.findByUser1OrUser2(user);
+        diaryList.add(diaryRepository.findByUser1AndUser2(user, user));
+
+        return diaryList;
     }
 }

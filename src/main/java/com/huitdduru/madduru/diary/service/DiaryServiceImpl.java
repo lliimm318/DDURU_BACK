@@ -49,16 +49,11 @@ public class DiaryServiceImpl implements DiaryService {
         User user = authenticationFacade.getUser();
 
         List<Diary> diaryList = diaryRepository.findByUser1OrUser2(user);
+        diaryList.add(diaryRepository.findByUser1AndUser2(user, user));
         List<DiaryListResponse> responses = new ArrayList<>();
-        Set<User> userList = new HashSet<>();
 
-        for(Diary d: diaryList) {
-            userList.add(d.getUser1());
-            userList.add(d.getUser2());
-        }
-
-        for(User u : userList) {
-            List<DiaryDetail> details = diaryDetailRepository.findByUserOrderByCreatedAt(u);
+        for(Diary diary: diaryList) {
+            List<DiaryDetail> details = diaryDetailRepository.findByDiaryOrderByCreatedAt(diary);
 
             for (DiaryDetail d : details) {
                 ExchangeDiaryResponse exchangeDiaryResponse = ExchangeDiaryResponse.builder()
@@ -70,10 +65,10 @@ public class DiaryServiceImpl implements DiaryService {
                         .build();
 
                 DiaryListResponse diaryListResponse = new DiaryListResponse();
-                diaryListResponse.setId(u.getId());
+                diaryListResponse.setId(d.getId());
                 diaryListResponse.setDiary(exchangeDiaryResponse);
                 diaryListResponse.setIsMine(false);
-                if (user==u) diaryListResponse.setIsMine(true);
+                if (user==d.getUser()) diaryListResponse.setIsMine(true);
 
                 responses.add(diaryListResponse);
             }

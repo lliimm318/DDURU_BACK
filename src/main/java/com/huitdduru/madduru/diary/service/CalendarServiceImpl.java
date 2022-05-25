@@ -70,7 +70,7 @@ public class CalendarServiceImpl implements CalendarService {
         List<DiaryDetail> detailList = new ArrayList<>();
 
         for (Diary d : diaryList) {
-            detailList.addAll(diaryDetailRepository.findByDateOrderByDate(date));
+            detailList.addAll(diaryDetailRepository.findByDiaryAndDateOrderByDate(d, date));
         }
 
         for (DiaryDetail d : detailList) {

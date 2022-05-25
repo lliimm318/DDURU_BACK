@@ -86,19 +86,20 @@ public class DiaryServiceImpl implements DiaryService {
 
         List<DiaryDetail> diaryDetail = diaryDetailRepository.findByDiaryOrderByCreatedAt(diary);
 
-        List<DiaryDetailResponse> responses = new ArrayList<>();
+        List<DetailResponse> responses = new ArrayList<>();
         DetailListResponse detailListResponse = new DetailListResponse();
         detailListResponse.setMatchedUserName(opponent.getName());
 
         for (DiaryDetail d : diaryDetail) {
-            DiaryDetailResponse detailResponse = DiaryDetailResponse.builder()
+            DetailResponse detailResponse = DetailResponse.builder()
                     .id(d.getId())
-                    .writer(d.getUser().getName())
                     .title(d.getTitle())
                     .date(d.getDate())
                     .content(d.getContent())
                     .feeling(d.getFeeling())
                     .image(d.getImagePath())
+                    .writer(d.getUser().getName())
+                    .userImage(d.getUser().getImagePath())
                     .build();
 
             responses.add(detailResponse);

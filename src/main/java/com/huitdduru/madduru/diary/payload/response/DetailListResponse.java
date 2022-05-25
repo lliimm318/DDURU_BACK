@@ -14,6 +14,6 @@ import java.util.List;
 public class DetailListResponse {
 
     private String matchedUserName;
-    private List<DiaryDetailResponse> list;
+    private List<DetailResponse> list;
 
 }

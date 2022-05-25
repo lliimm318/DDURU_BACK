@@ -1,5 +1,6 @@
 package com.huitdduru.madduru.security;
 
+import com.huitdduru.madduru.exception.ExceptionHandlingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +14,9 @@ public class TokenConfigure extends SecurityConfigurerAdapter<DefaultSecurityFil
 
     @Override
     public void configure(HttpSecurity httpSecurity) {
+        ExceptionHandlingFilter exceptionHandlingFilter = new ExceptionHandlingFilter();
         TokenFilter tokenFilter = new TokenFilter(tokenProvider);
         httpSecurity.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(exceptionHandlingFilter, TokenFilter.class);
     }
 }

@@ -70,7 +70,7 @@ public class TokenProvider {
                     .parseClaimsJws(token).getBody().getSubject();
             return true;
         } catch (Exception e) {
-            return false;
+            throw new InvalidTokenException();
         }
     }
 

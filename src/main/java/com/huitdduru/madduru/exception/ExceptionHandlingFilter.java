@@ -25,4 +25,5 @@ public class ExceptionHandlingFilter extends OncePerRequestFilter {
         response.setContentType("application/json");
         response.getWriter().write(errorResponse.toString());
     }
+
 }

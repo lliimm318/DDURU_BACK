@@ -62,6 +62,8 @@ public class DiaryServiceImpl implements DiaryService {
                         .writer(d.getUser().getName())
                         .date(d.getDate())
                         .createdAt(d.getCreatedAt())
+                        .image(d.getImagePath())
+                        .content(d.getContent())
                         .build();
 
                 DiaryListResponse diaryListResponse = new DiaryListResponse();

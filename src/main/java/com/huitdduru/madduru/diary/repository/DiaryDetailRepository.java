@@ -15,7 +15,7 @@ public interface DiaryDetailRepository extends JpaRepository<DiaryDetail, Intege
 
     List<DiaryDetail> findByDiaryOrderByCreatedAt(Diary diary);
 
-    List<DiaryDetail> findByDateOrderByDate(String date);
+    List<DiaryDetail> findByDiaryAndDateOrderByDate(Diary diary, String date);
 
     List<DiaryDetail> findByDiaryAndDateContainsOrderByDate(Diary diary, String date);
 

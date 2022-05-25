@@ -21,4 +21,8 @@ public class ExchangeDiaryResponse {
 
     private final LocalDateTime createdAt;
 
+    private final String image;
+
+    private final String content;
+
 }

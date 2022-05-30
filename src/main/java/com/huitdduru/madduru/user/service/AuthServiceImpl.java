@@ -95,7 +95,6 @@ public class AuthServiceImpl implements AuthService {
                     String generatedAccessToken = tokenProvider.generateRefreshToken(refreshToken.getEmail());
                     return refreshToken.update(generatedAccessToken, ttl);
                 })
-                .map(refreshTokenRepository::save)
                 .map(refreshToken -> {
                     String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
                     return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken());

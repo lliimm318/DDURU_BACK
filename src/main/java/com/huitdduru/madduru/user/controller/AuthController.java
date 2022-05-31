@@ -2,6 +2,7 @@ package com.huitdduru.madduru.user.controller;
 
 import com.huitdduru.madduru.user.payload.request.AuthRequest;
 import com.huitdduru.madduru.user.payload.request.RegisterRequest;
+import com.huitdduru.madduru.user.payload.response.AuthResponse;
 import com.huitdduru.madduru.user.payload.response.ImageResponse;
 import com.huitdduru.madduru.user.payload.response.TokenResponse;
 import com.huitdduru.madduru.user.service.AuthService;
@@ -24,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    TokenResponse signIn(@RequestBody AuthRequest authRequest) {
+    AuthResponse signIn(@RequestBody AuthRequest authRequest) {
         return authService.auth(authRequest);
     }
 

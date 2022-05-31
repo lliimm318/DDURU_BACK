@@ -10,6 +10,7 @@ import com.huitdduru.madduru.security.TokenProvider;
 import com.huitdduru.madduru.redis.RefreshToken;
 import com.huitdduru.madduru.user.entity.User;
 import com.huitdduru.madduru.redis.RefreshTokenRepository;
+import com.huitdduru.madduru.user.payload.response.AuthResponse;
 import com.huitdduru.madduru.user.payload.response.ImageResponse;
 import com.huitdduru.madduru.user.repository.UserRepository;
 import com.huitdduru.madduru.user.payload.request.AuthRequest;
@@ -69,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public TokenResponse auth(AuthRequest authRequest) {
+    public AuthResponse auth(AuthRequest authRequest) {
         User user = userRepository.findByEmail(authRequest.getEmail())
                 .filter(u -> passwordEncoder.matches(authRequest.getPassword(), u.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
@@ -82,7 +83,10 @@ public class AuthServiceImpl implements AuthService {
 
         refreshTokenRepository.save(refreshToken);
 
-        return TokenResponse.builder()
+        Diary diary = diaryRepository.findByUser1AndUser2(user, user);
+
+        return AuthResponse.builder()
+                .diaryId(diary.getId())
                 .accessToken(tokenProvider.generateAccessToken(authRequest.getEmail()))
                 .refreshToken(refreshToken.getRefreshToken())
                 .build();

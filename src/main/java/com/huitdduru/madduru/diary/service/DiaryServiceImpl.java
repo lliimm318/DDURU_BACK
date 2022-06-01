@@ -34,7 +34,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .title(diaryRequest.getTitle())
                 .content(diaryRequest.getContents())
                 .user(authenticationFacade.getUser())
-                .date(diaryRequest.getDate().toString())
+                .date(diaryRequest.getDate())
                 .createdAt(LocalDateTime.now())
                 .feeling(diaryRequest.getFeeling())
                 .imagePath(diaryRequest.getImageUrl())

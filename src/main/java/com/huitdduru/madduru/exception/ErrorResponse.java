@@ -1,10 +1,12 @@
 package com.huitdduru.madduru.exception;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class ErrorResponse {
 
     private final int status;

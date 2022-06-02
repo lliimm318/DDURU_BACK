@@ -37,10 +37,9 @@ public class CalendarServiceImpl implements CalendarService {
         }
 
         List<CalendarCountResponse> calendarList = new ArrayList<>();
-
         Map<String, Integer> calMap = new LinkedHashMap<>();
-
         List<String> calendar = calendar(year, month);
+
         for (String s : calendar) {
             calMap.put(s, 0);
         }

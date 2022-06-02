@@ -7,9 +7,7 @@ import com.huitdduru.madduru.exception.exceptions.*;
 import com.huitdduru.madduru.email.repository.RandomCodeRepository;
 import com.huitdduru.madduru.s3.FileUploader;
 import com.huitdduru.madduru.security.TokenProvider;
-import com.huitdduru.madduru.redis.RefreshToken;
 import com.huitdduru.madduru.user.entity.User;
-import com.huitdduru.madduru.redis.RefreshTokenRepository;
 import com.huitdduru.madduru.user.payload.response.AuthResponse;
 import com.huitdduru.madduru.user.payload.response.ImageResponse;
 import com.huitdduru.madduru.user.repository.UserRepository;
@@ -32,7 +30,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final DiaryRepository diaryRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final RandomCodeRepository randomCodeRepository;
 
     private final FileUploader fileUploader;
@@ -75,35 +72,22 @@ public class AuthServiceImpl implements AuthService {
                 .filter(u -> passwordEncoder.matches(authRequest.getPassword(), u.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
 
-        RefreshToken refreshToken = RefreshToken.builder()
-                .email(user.getEmail())
-                .refreshToken(tokenProvider.generateRefreshToken(user.getEmail()))
-                .ttl(ttl)
-                .build();
-
-        refreshTokenRepository.save(refreshToken);
-
         Diary diary = diaryRepository.findByUser1AndUser2(user, user);
 
         return AuthResponse.builder()
                 .diaryId(diary.getId())
                 .accessToken(tokenProvider.generateAccessToken(authRequest.getEmail()))
-                .refreshToken(refreshToken.getRefreshToken())
+                .refreshToken(tokenProvider.generateRefreshToken(user.getEmail()))
                 .build();
     }
 
     @Override
     public TokenResponse refreshToken(String token) {
-        return refreshTokenRepository.findByRefreshToken(token)
-                .map(refreshToken -> {
-                    String generatedAccessToken = tokenProvider.generateRefreshToken(refreshToken.getEmail());
-                    return refreshToken.update(generatedAccessToken, ttl);
-                })
-                .map(refreshToken -> {
-                    String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
-                    return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken());
-                })
-                .orElseThrow(InvalidTokenException::new);
+
+        return TokenResponse.builder()
+                .accessToken(tokenProvider.generateAccessToken(tokenProvider.getEmail(token)))
+                .refreshToken(token)
+                .build();
     }
 
     @Override

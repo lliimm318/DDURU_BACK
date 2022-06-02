@@ -1,4 +1,4 @@
-package com.huitdduru.madduru.matching;
+package com.huitdduru.madduru.websocket;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;

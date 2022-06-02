@@ -1,4 +1,4 @@
-package com.huitdduru.madduru.matching.annotations;
+package com.huitdduru.madduru.websocket.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

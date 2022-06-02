@@ -1,10 +1,10 @@
-package com.huitdduru.madduru.matching.exception;
+package com.huitdduru.madduru.websocket.exception;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.listener.ExceptionListener;
 import com.huitdduru.madduru.exception.BaseException;
 import com.huitdduru.madduru.exception.ErrorResponse;
-import com.huitdduru.madduru.matching.SocketProperty;
+import com.huitdduru.madduru.websocket.SocketProperty;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 

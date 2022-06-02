@@ -1,4 +1,4 @@
-package com.huitdduru.madduru.matching.security;
+package com.huitdduru.madduru.websocket.security;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.huitdduru.madduru.security.TokenProvider;

@@ -1,4 +1,4 @@
-package com.huitdduru.madduru.matching;
+package com.huitdduru.madduru.websocket;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

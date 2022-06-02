@@ -1,9 +1,9 @@
-package com.huitdduru.madduru.matching;
+package com.huitdduru.madduru.websocket;
 
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.huitdduru.madduru.matching.exception.SocketExceptionListener;
-import com.huitdduru.madduru.matching.security.WebSocketConnectController;
+import com.huitdduru.madduru.websocket.exception.SocketExceptionListener;
+import com.huitdduru.madduru.websocket.security.WebSocketConnectController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;

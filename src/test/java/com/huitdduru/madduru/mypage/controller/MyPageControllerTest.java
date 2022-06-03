@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.exception.exceptions.UserNotAccessExcepion;
-import com.huitdduru.madduru.mypage.payload.request.IntroRequest;
+import com.huitdduru.madduru.mypage.payload.request.MyInfoRequest;
 import com.huitdduru.madduru.security.TokenProvider;
 import com.huitdduru.madduru.user.entity.User;
 import com.huitdduru.madduru.user.repository.UserRepository;
@@ -71,9 +71,9 @@ class MyPageControllerTest {
         setToken(tokenProvider.generateAccessToken(user.getEmail()));
         String updatedIntro = "updated intro";
 
-        mvc.perform(MockMvcRequestBuilders.patch("/intro")
+        mvc.perform(MockMvcRequestBuilders.put("/mypage")
                 .header("token", "Bearer " + token)
-                .content(objectMapper.writeValueAsString(new IntroRequest(updatedIntro)))
+                .content(objectMapper.writeValueAsString(new MyInfoRequest(updatedIntro, "s3")))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 

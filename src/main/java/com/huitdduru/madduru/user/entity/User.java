@@ -50,12 +50,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<DiaryDetail> diaryDetails = new ArrayList<>();
 
-    public User setIntro(String intro) {
+    public User setIntro(String intro, String imagePath) {
         this.intro = intro;
-        return this;
-    }
-
-    public User setImagePath(String imagePath) {
         this.imagePath = imagePath;
         return this;
     }

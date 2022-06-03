@@ -2,20 +2,17 @@ package com.huitdduru.madduru.mypage.service;
 
 import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.entity.DiaryDetail;
+import com.huitdduru.madduru.diary.payload.response.DiaryResponse;
 import com.huitdduru.madduru.diary.repository.DiaryDetailRepository;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
-import com.huitdduru.madduru.mypage.payload.request.IntroRequest;
-import com.huitdduru.madduru.diary.payload.response.DiaryResponse;
+import com.huitdduru.madduru.mypage.payload.request.MyInfoRequest;
 import com.huitdduru.madduru.mypage.payload.response.MyInfoResponse;
-import com.huitdduru.madduru.s3.FileUploader;
 import com.huitdduru.madduru.security.auth.AuthenticationFacade;
 import com.huitdduru.madduru.user.entity.User;
 import com.huitdduru.madduru.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -27,26 +24,14 @@ public class MyPageServiceImpl implements MyPageService {
 
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
-    private final FileUploader fileUploader;
     private final DiaryRepository diaryRepository;
     private final DiaryDetailRepository diaryDetailRepository;
 
     @Override
-    public void updateIntroduction(IntroRequest introRequest) {
-        User user = authenticationFacade.getUser().setIntro(introRequest.getIntro());
+    public void updateInfo(MyInfoRequest request) {
+        User user = authenticationFacade.getUser()
+                .setIntro(request.getIntro(), request.getImageUrl());
         userRepository.save(user);
-    }
-
-    @Override
-    public void updateProfileImage(MultipartFile image) throws IOException {
-        User user = authenticationFacade.getUser();
-
-        String imagePath = image != null ? fileUploader.uploadFile(image) : null;
-
-        if(user.getImagePath() != null)
-            fileUploader.removeFile(user.getImagePath());
-
-        userRepository.save(user.setImagePath(imagePath));
     }
 
     @Override

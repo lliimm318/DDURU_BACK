@@ -83,7 +83,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse refreshToken(String token) {
-
         return TokenResponse.builder()
                 .accessToken(tokenProvider.generateAccessToken(tokenProvider.getEmail(token)))
                 .refreshToken(token)

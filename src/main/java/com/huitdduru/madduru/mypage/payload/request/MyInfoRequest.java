@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IntroRequest {
+public class MyInfoRequest {
 
     private String intro;
+
+    private String imageUrl;
 
 }

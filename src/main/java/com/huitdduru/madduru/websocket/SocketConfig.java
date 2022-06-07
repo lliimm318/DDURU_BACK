@@ -28,6 +28,7 @@ public class SocketConfig {
         SocketIOServer server = new SocketIOServer(config);
         mappingSupporter.addListeners(server);
         server.addConnectListener(connectController::onConnect);
+        server.addDisconnectListener(connectController::onDisconnect);
 
         return server;
     }

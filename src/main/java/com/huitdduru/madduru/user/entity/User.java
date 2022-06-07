@@ -65,4 +65,8 @@ public class User {
         return this;
     }
 
+    public String getStringId() {
+        return this.getId().toString();
+    }
+
 }

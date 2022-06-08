@@ -2,8 +2,8 @@ package com.huitdduru.madduru.websocket.security;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.huitdduru.madduru.matching.queue.WaitingQueue;
+import com.huitdduru.madduru.matching.service.AcceptProperty;
 import com.huitdduru.madduru.security.TokenProvider;
-import com.huitdduru.madduru.websocket.SocketProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -16,17 +16,15 @@ public class WebSocketConnectController {
     private final WaitingQueue waitingQueue;
 
     public void onConnect(SocketIOClient client) {
-        String token = client.getHandshakeData().getSingleUrlParam("Authorization");
+        String token = client.getHandshakeData().getHttpHeaders().get("Authorization");
         Authentication authentication = tokenProvider.getAuthentication(token);
-        System.out.println("authentication.getName() = " + authentication.getName());
-        client.set(AuthenticationProperty.USER_KEY, authentication.getName());
-        client.set(SocketProperty.ACCEPT_KEY, null);
+        client.set(ClientProperty.USER_KEY, authentication.getName());
+        client.set(ClientProperty.ACCEPT_KEY, AcceptProperty.NULL);
+        client.set(ClientProperty.ROOM_ID_KEY, AcceptProperty.NULL);
     }
 
     public void onDisconnect(SocketIOClient client) {
         waitingQueue.removeUser(client.getSessionId());
-        client.leaveRoom(SocketProperty.WAITING_KEY);
     }
 
 }
-

@@ -76,7 +76,7 @@ public class MatchingServiceImpl implements MatchingService {
     public void cancel(SocketIOClient client, SocketIOServer server) {
         waitingQueue.removeUser(client.getSessionId());
         String roomId = client.get(ClientProperty.ROOM_ID_KEY);
-        if (roomId.equals(AcceptProperty.NULL)) {
+        if (!roomId.equals(AcceptProperty.NULL)) {
             server.getRoomOperations(roomId)
                     .getClients().forEach(c -> {
                 client.leaveRoom(client.get(ClientProperty.ROOM_ID_KEY));

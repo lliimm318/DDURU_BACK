@@ -10,11 +10,7 @@ public class SocketProperty {
 
     public static final String ERROR_KEY = "error";
 
-    public static final String ACCEPT_KEY = "accept";
-
-    public static final String ROOM_ID_KEY = "room_id";
-
     public static final String CANCEL_KEY = "cancel";
 
-    public static final String WAITING_KEY = "waiting";
+    public static final String SUCCESS_KEY = "success";
 }

@@ -93,7 +93,7 @@ public class MatchingServiceImpl implements MatchingService {
                 .name(user.getName())
                 .build();
 
-        client.set(ClientProperty   .ACCEPT_KEY, AcceptProperty.NULL);
+        client.set(ClientProperty.ACCEPT_KEY, AcceptProperty.NULL);
         client.sendEvent(SocketProperty.USERINFO_KEY, userInfo);
     }
 
@@ -111,6 +111,12 @@ public class MatchingServiceImpl implements MatchingService {
         List<SocketIOClient> clients = new ArrayList<>(
                 server.getRoomOperations(room_id).getClients()
         );
+
+        if (clients.size() < 2) {
+            client.sendEvent(SocketProperty.ERROR_KEY, new SimpleMessage("매칭 상대가 떠난거 같습니다."));
+            cancel(client, server);
+            return;
+        }
 
         MatePair matePair = buildMatePair(clients.get(0), clients.get(1));
 

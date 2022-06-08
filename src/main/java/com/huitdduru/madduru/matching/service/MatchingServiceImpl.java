@@ -7,7 +7,6 @@ import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.matching.entity.Matching;
 import com.huitdduru.madduru.matching.entity.MatchingId;
 import com.huitdduru.madduru.matching.entity.MatchingRepository;
-import com.huitdduru.madduru.matching.exception.MatchingException;
 import com.huitdduru.madduru.matching.message.SimpleMessage;
 import com.huitdduru.madduru.matching.message.UserinfoMessage;
 import com.huitdduru.madduru.matching.payload.AcceptRequest;
@@ -104,8 +103,10 @@ public class MatchingServiceImpl implements MatchingService {
 
         String room_id = client.get(ClientProperty.ROOM_ID_KEY);
 
-        if (room_id.equals(AcceptProperty.NULL))
-            throw new MatchingException("당신은 아직 매칭되지 않았습니다.");
+        if (room_id.equals(AcceptProperty.NULL)) {
+            client.sendEvent(SocketProperty.ERROR_KEY, new SimpleMessage("당신은 아직 매칭되지 않았습니다."));
+            return;
+        }
 
         List<SocketIOClient> clients = new ArrayList<>(
                 server.getRoomOperations(room_id).getClients()
@@ -127,11 +128,6 @@ public class MatchingServiceImpl implements MatchingService {
         }
         else if (user1Accepted.equals(AcceptProperty.TRUE) && user2Accepted.equals(AcceptProperty.TRUE)) {
 
-            Matching matching = matchingRepository.findById(MatchingId.builder()
-                    .user1(matePair.getUser1().getId())
-                    .user2(matePair.getUser2().getId())
-                    .build()).orElseThrow(() -> new MatchingException("매칭을 찾을 수 없어"));
-
             diaryRepository.save(Diary.builder()
                     .user1(matePair.getUser1())
                     .user2(matePair.getUser2())
@@ -140,8 +136,6 @@ public class MatchingServiceImpl implements MatchingService {
                     .build());
 
             clients.forEach(c -> c.sendEvent(SocketProperty.SUCCESS_KEY, new SimpleMessage("매칭을 성공적으로 마쳤습니다.")));
-
-            matchingRepository.save(matching.accept(true));
         }
     }
 

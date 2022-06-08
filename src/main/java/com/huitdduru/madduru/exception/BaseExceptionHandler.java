@@ -1,6 +1,5 @@
 package com.huitdduru.madduru.exception;
 
-import com.huitdduru.madduru.matching.exception.MatchingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -14,12 +13,6 @@ public class BaseExceptionHandler {
     protected ResponseEntity<ErrorResponse> baseExceptionHandle(final Exception e) {
         return new ResponseEntity<>(new ErrorResponse(400, e.getMessage()),
                 HttpStatus.valueOf(400));
-    }
-
-    @ExceptionHandler(MatchingException.class)
-    protected ResponseEntity<ErrorResponse> matchingExceptionHandle(final MatchingException e) {
-        return new ResponseEntity<>(new ErrorResponse(e.getErrorCode().getStatus(), e.getMessage()),
-                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(BaseException.class)

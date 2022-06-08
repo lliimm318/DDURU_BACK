@@ -40,12 +40,10 @@ public class WaitingQueue {
                     .user2(cond ? parseInt(u.getUserId()) : currentUserId)
                     .build());
 
-            if (!exists) {
-                waitingQueue.remove(u);
-                return u;
-            } else {
-                System.out.println(u.getUserId() + " " + currentUserId + " 의 일기가 이미 존재합니다.");
-            }
+            waitingQueue.remove(u);
+            if (exists)
+                System.out.println(u.getUserId() + " " + currentUserId + " 의 일기가 이미 존재하지만 매칭되었습니다.");
+            return u;
         }
         return null;
     }

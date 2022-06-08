@@ -16,7 +16,7 @@ public class SocketConfig {
     private final WebSocketConnectController connectController;
     private final SocketExceptionListener exceptionListener;
 
-    private Integer port = 9000;
+    private Integer port = 8888;
 
     @Bean
     public SocketIOServer socketIOServer() {

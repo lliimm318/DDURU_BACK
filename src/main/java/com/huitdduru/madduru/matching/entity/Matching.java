@@ -31,6 +31,9 @@ public class Matching {
     @Column(name = "is_accepted", nullable = false)
     private Boolean isAccepted;
 
+    @Column(name = "room_id")
+    private String roomId;
+
     public Matching accept(boolean b) {
         this.isAccepted = b;
         return this;

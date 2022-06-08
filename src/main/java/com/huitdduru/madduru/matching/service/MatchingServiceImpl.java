@@ -83,6 +83,10 @@ public class MatchingServiceImpl implements MatchingService {
                 c.set(ClientProperty.ROOM_ID_KEY, AcceptProperty.NULL);
                 c.set(ClientProperty.ACCEPT_KEY, AcceptProperty.NULL);
             });
+        } else {
+            client.sendEvent(SocketProperty.CANCEL_KEY, new SimpleMessage("매칭을 취소했습니다."));
+            client.set(ClientProperty.ROOM_ID_KEY, AcceptProperty.NULL);
+            client.set(ClientProperty.ACCEPT_KEY, AcceptProperty.NULL);
         }
     }
 

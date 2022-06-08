@@ -78,10 +78,10 @@ public class MatchingServiceImpl implements MatchingService {
         if (!roomId.equals(AcceptProperty.NULL)) {
             server.getRoomOperations(roomId)
                     .getClients().forEach(c -> {
-                client.leaveRoom(client.get(ClientProperty.ROOM_ID_KEY));
-                client.sendEvent(SocketProperty.CANCEL_KEY, new SimpleMessage("매칭이 취소되었습니다."));
-                client.set(ClientProperty.ROOM_ID_KEY, AcceptProperty.NULL);
-                client.set(ClientProperty.ACCEPT_KEY, AcceptProperty.NULL);
+                c.leaveRoom(client.get(ClientProperty.ROOM_ID_KEY));
+                c.sendEvent(SocketProperty.CANCEL_KEY, new SimpleMessage("매칭이 취소되었습니다."));
+                c.set(ClientProperty.ROOM_ID_KEY, AcceptProperty.NULL);
+                c.set(ClientProperty.ACCEPT_KEY, AcceptProperty.NULL);
             });
         }
     }
@@ -93,7 +93,7 @@ public class MatchingServiceImpl implements MatchingService {
                 .name(user.getName())
                 .build();
 
-        client.set(ClientProperty.ACCEPT_KEY, AcceptProperty.NULL);
+        client.set(ClientProperty   .ACCEPT_KEY, AcceptProperty.NULL);
         client.sendEvent(SocketProperty.USERINFO_KEY, userInfo);
     }
 

@@ -14,6 +14,7 @@ public enum ErrorCode {
     EMAIL_CODE_NOT_FOUND(404,"email code not found"),
     DIARY_NOT_FOUND(404,"diary not found"),
     USER_ALREADY(409, "user already"),
+    ALREADY_RELATIONS_CONTINUES(409, "already relation continues."),
     NOT_MAIL_FORMAT(500, "not email format"),
     USER_NOT_ACCESS(500, "user not access"),
     EMAIL_NOT_FORMAT(500, "not in email format"),

@@ -5,6 +5,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.huitdduru.madduru.websocket.exception.SocketExceptionListener;
 import com.huitdduru.madduru.websocket.security.WebSocketConnectController;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,8 @@ public class SocketConfig {
     private final WebSocketConnectController connectController;
     private final SocketExceptionListener exceptionListener;
 
-    private Integer port = 8888;
+    @Value("${socket.port}")
+    private Integer port;
 
     @Bean
     public SocketIOServer socketIOServer() {

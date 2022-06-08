@@ -22,6 +22,9 @@ spring:
           starttls:
             enable: true
 
+socket:
+  port: ${SOCKET_PORT}
+
 auth:
   jwt:
     exp:

@@ -45,7 +45,7 @@ public class SocketExceptionListener implements ExceptionListener {
         e.printStackTrace();
 
         if (e.getCause() instanceof BaseException) {
-            BaseException error = (BaseException) e;
+            BaseException error = (BaseException) e.getCause();
             message = ErrorResponse.builder()
                     .message(error.getErrorCode().getMessage())
                     .status(error.getErrorCode().getStatus())

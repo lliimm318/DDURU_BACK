@@ -15,7 +15,7 @@ public class SocketAuthenticationFacadeImpl implements SocketAuthenticationFacad
 
     @Override
     public User getCurrentUser(SocketIOClient client) {
-        String email = client.get(AuthenticationProperty.USER_KEY);
+        String email = client.get(ClientProperty.USER_KEY);
         return userRepository.findByEmail(email)
                     .orElseThrow(UserNotFoundException::new);
     }

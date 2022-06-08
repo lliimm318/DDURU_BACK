@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
+import com.huitdduru.madduru.exception.exceptions.AlreadyRelationContinuesException;
 import com.huitdduru.madduru.matching.entity.Matching;
 import com.huitdduru.madduru.matching.entity.MatchingId;
 import com.huitdduru.madduru.matching.entity.MatchingRepository;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -37,6 +39,11 @@ public class MatchingServiceImpl implements MatchingService {
     @Override
     public void start(SocketIOClient client1, SocketIOServer server) {
         User currentUser = authenticationFacade.getCurrentUser(client1);
+
+        Optional<Diary> diary = diaryRepository.findByUser1OrUser2AndRelationContinuesIsTrue(currentUser);
+
+        if (diary.isPresent() && diary.get().isRelationContinues())
+            client1.sendEvent(SocketProperty.ERROR_KEY, new SimpleMessage("이미 진행중인 일기가 존재합니다."));
 
         UniqueUser mate = waitingQueue.matching(currentUser.getId());
 
@@ -137,6 +144,12 @@ public class MatchingServiceImpl implements MatchingService {
                     });
         }
         else if (user1Accepted.equals(AcceptProperty.TRUE) && user2Accepted.equals(AcceptProperty.TRUE)) {
+            Optional<Diary> diary1 = diaryRepository.findByUser1OrUser2AndRelationContinuesIsTrue(matePair.getUser1());
+            Optional<Diary> diary2 = diaryRepository.findByUser1OrUser2AndRelationContinuesIsTrue(matePair.getUser2());
+
+            if ((diary1.isPresent() && diary1.get().isRelationContinues())
+                    || (diary2.isPresent() && diary2.get().isRelationContinues()))
+                throw new AlreadyRelationContinuesException();
 
             diaryRepository.save(Diary.builder()
                     .user1(matePair.getUser1())
@@ -150,7 +163,6 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     private MatePair buildMatePair(SocketIOClient client1, SocketIOClient client2) {
-
         User user1 = authenticationFacade.getCurrentUser(client1);
         User user2 = authenticationFacade.getCurrentUser(client2);
 

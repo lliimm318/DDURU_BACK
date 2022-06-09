@@ -5,16 +5,19 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.exception.exceptions.AlreadyRelationContinuesException;
+import com.huitdduru.madduru.exception.exceptions.UserNotFoundException;
 import com.huitdduru.madduru.matching.entity.Matching;
 import com.huitdduru.madduru.matching.entity.MatchingId;
 import com.huitdduru.madduru.matching.entity.MatchingRepository;
 import com.huitdduru.madduru.matching.message.SimpleMessage;
 import com.huitdduru.madduru.matching.message.UserinfoMessage;
 import com.huitdduru.madduru.matching.payload.AcceptRequest;
+import com.huitdduru.madduru.matching.payload.FriendCodeRequest;
 import com.huitdduru.madduru.matching.queue.UniqueUser;
 import com.huitdduru.madduru.matching.queue.WaitingQueue;
 import com.huitdduru.madduru.matching.service.dto.MatePair;
 import com.huitdduru.madduru.user.entity.User;
+import com.huitdduru.madduru.user.repository.UserRepository;
 import com.huitdduru.madduru.websocket.SocketProperty;
 import com.huitdduru.madduru.websocket.security.ClientProperty;
 import com.huitdduru.madduru.websocket.security.SocketAuthenticationFacade;
@@ -35,17 +38,15 @@ public class MatchingServiceImpl implements MatchingService {
     private final WaitingQueue waitingQueue;
     private final MatchingRepository matchingRepository;
     private final DiaryRepository diaryRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void start(SocketIOClient client1, SocketIOServer server) {
         User currentUser = authenticationFacade.getCurrentUser(client1);
 
-        Optional<Diary> diary = diaryRepository.findByUser1OrUser2AndRelationContinuesIsTrue(currentUser);
-
-        if (diary.isPresent() && diary.get().isRelationContinues())
-            client1.sendEvent(SocketProperty.ERROR_KEY, new SimpleMessage("이미 진행중인 일기가 존재합니다."));
-
         UniqueUser mate = waitingQueue.matching(currentUser.getId());
+
+        if (checkRelationContinues(client1, currentUser)) return;
 
         if (mate != null) {
             SocketIOClient client2 = server.getClient(mate.getUuid());
@@ -76,6 +77,17 @@ public class MatchingServiceImpl implements MatchingService {
         } else {
             waitingQueue.addUser(new UniqueUser(currentUser.getStringId(), client1.getSessionId()));
         }
+    }
+
+    private boolean checkRelationContinues(SocketIOClient client, User user) {
+        Optional<Diary> diary = diaryRepository.findByUser1OrUser2AndRelationContinuesIsTrue(user);
+
+        if (diary.isPresent() && diary.get().isRelationContinues()) {
+            client.sendEvent(SocketProperty.ERROR_KEY, new SimpleMessage("이미 진행중인 일기가 존재합니다."));
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -160,6 +172,28 @@ public class MatchingServiceImpl implements MatchingService {
 
             clients.forEach(c -> c.sendEvent(SocketProperty.SUCCESS_KEY, new SimpleMessage("매칭을 성공적으로 마쳤습니다.")));
         }
+    }
+
+    @Override
+    public void friendMatching(SocketIOClient client, FriendCodeRequest request) {
+        String code = request.getCode();
+
+        User user = authenticationFacade.getCurrentUser(client);
+
+        if (checkRelationContinues(client, user)) return;
+
+        User mate = userRepository.findByCode(code).orElseThrow(UserNotFoundException::new);
+
+        boolean cond = user.getId() < mate.getId();
+
+        diaryRepository.save(Diary.builder()
+                .user1(cond ? user : mate)
+                .user2(cond ? mate : user)
+                .createdAt(LocalDateTime.now())
+                .relationContinues(true)
+                .build());
+
+        client.sendEvent(SocketProperty.SUCCESS_KEY, new SimpleMessage("매칭에 성공했습니다."));
     }
 
     private MatePair buildMatePair(SocketIOClient client1, SocketIOClient client2) {

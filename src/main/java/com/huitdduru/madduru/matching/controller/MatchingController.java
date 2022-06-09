@@ -38,6 +38,11 @@ public class MatchingController {
         socketService.accept(client, server, request);
     }
 
+    @SocketMapping(endpoint = "matching.friend", requestCls = FriendCodeRequest.class)
+    public void friendCodeMatching(SocketIOClient client, SocketIOServer server, FriendCodeRequest request) {
+        socketService.friendMatching(client, request);
+    }
+
     @PostMapping("/mate")
     @ResponseStatus(HttpStatus.CREATED)
     public void friendCodeMatching(@RequestBody FriendCodeRequest request) {

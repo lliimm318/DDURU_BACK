@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.huitdduru.madduru.diary.entity.Diary;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
+import com.huitdduru.madduru.exception.ErrorResponse;
 import com.huitdduru.madduru.exception.exceptions.AlreadyRelationContinuesException;
 import com.huitdduru.madduru.exception.exceptions.UserNotFoundException;
 import com.huitdduru.madduru.matching.entity.Matching;
@@ -83,7 +84,7 @@ public class MatchingServiceImpl implements MatchingService {
         Optional<Diary> diary = diaryRepository.findByUser1OrUser2AndRelationContinuesIsTrue(user);
 
         if (diary.isPresent() && diary.get().isRelationContinues()) {
-            client.sendEvent(SocketProperty.ERROR_KEY, new SimpleMessage("이미 진행중인 일기가 존재합니다."));
+            client.sendEvent(SocketProperty.ERROR_KEY, new ErrorResponse(400, "이미 진행중인 일기가 존재합니다."));
             return true;
         }
 
@@ -127,7 +128,7 @@ public class MatchingServiceImpl implements MatchingService {
         String room_id = client.get(ClientProperty.ROOM_ID_KEY);
 
         if (room_id.equals(AcceptProperty.NULL)) {
-            client.sendEvent(SocketProperty.ERROR_KEY, new SimpleMessage("당신은 아직 매칭되지 않았습니다."));
+            client.sendEvent(SocketProperty.ERROR_KEY, new ErrorResponse(400, "당신은 아직 매칭되지 않았습니다."));
             return;
         }
 
@@ -136,7 +137,7 @@ public class MatchingServiceImpl implements MatchingService {
         );
 
         if (clients.size() < 2) {
-            client.sendEvent(SocketProperty.ERROR_KEY, new SimpleMessage("매칭 상대가 떠난거 같습니다."));
+            client.sendEvent(SocketProperty.ERROR_KEY, new ErrorResponse(400, "매칭 상대가 떠났습니다."));
             cancel(client, server);
             return;
         }

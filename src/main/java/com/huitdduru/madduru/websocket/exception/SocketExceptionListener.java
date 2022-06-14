@@ -50,6 +50,12 @@ public class SocketExceptionListener implements ExceptionListener {
                     .message(error.getErrorCode().getMessage())
                     .status(error.getErrorCode().getStatus())
                     .build();
+        } else if (e instanceof BaseException) {
+            BaseException error = (BaseException) e;
+            message = ErrorResponse.builder()
+                    .message(error.getErrorCode().getMessage())
+                    .status(error.getErrorCode().getStatus())
+                    .build();
         } else {
             message = ErrorResponse.builder()
                     .status(500)

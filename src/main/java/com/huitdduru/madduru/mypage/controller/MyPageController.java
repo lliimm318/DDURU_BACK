@@ -2,6 +2,7 @@ package com.huitdduru.madduru.mypage.controller;
 
 import com.huitdduru.madduru.diary.payload.response.DiaryResponse;
 import com.huitdduru.madduru.mypage.payload.request.MyInfoRequest;
+import com.huitdduru.madduru.mypage.payload.response.CodeResponse;
 import com.huitdduru.madduru.mypage.payload.response.MyInfoResponse;
 import com.huitdduru.madduru.mypage.service.MyPageService;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class MyPageController {
     }
 
     @GetMapping("/code")
-    public MyInfoResponse code() {
-        return mypageService.queryMyInfo();
+    public CodeResponse code() {
+        return mypageService.code();
     }
 }

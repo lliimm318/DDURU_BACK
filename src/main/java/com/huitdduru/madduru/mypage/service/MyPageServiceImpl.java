@@ -36,7 +36,10 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public void unregister() {
-        userRepository.save(authenticationFacade.getUser().unregister());
+        User user = authenticationFacade.getUser();
+        List<Diary> diaries = diaryRepository.findByUser1OrUser2(user);
+        diaries.forEach(diary -> diaryRepository.save(diary.updateRelation(false)));
+        userRepository.deleteById(user.getId());
     }
 
     @Override
@@ -51,7 +54,7 @@ public class MyPageServiceImpl implements MyPageService {
                 .map(diary -> {
                     User user1 = diary.getUser1(), user2 = diary.getUser2();
 
-                    boolean currentUserIsUser1 = user1.equals(user);
+                    boolean currentUserIsUser1 = user.equals(user1);
 
                     User currentUser = currentUserIsUser1 ? user1 : user2,
                             mate = !currentUserIsUser1 ? user1 : user2;
@@ -61,10 +64,10 @@ public class MyPageServiceImpl implements MyPageService {
                     return DiaryResponse.builder()
                         .diaryId(diary.getId())
                         .currentUserImg(currentUser.getImagePath())
-                        .mateImg(mate.getImagePath())
+                        .mateImg(mate != null ? mate.getImagePath() : null)
                         .isMyTurn(mostRecentDiaryDetail != null ?
                                 mostRecentDiaryDetail.getUser().equals(mate) : null)
-                        .mateName(mate.getName())
+                        .mateName(mate != null ? mate.getName() : "탈퇴한 유저")
                         .hoursAgo(mostRecentDiaryDetail != null ?
                                 ChronoUnit.HOURS.between(mostRecentDiaryDetail.getCreatedAt(), LocalDateTime.now()) : null)
                         .build();

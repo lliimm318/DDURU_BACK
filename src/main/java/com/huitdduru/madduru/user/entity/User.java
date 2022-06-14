@@ -41,13 +41,13 @@ public class User {
     @Column(name = "is_exist", nullable = false)
     private boolean isExist;
 
-    @OneToMany(mappedBy = "user1", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user1", orphanRemoval = true)
     private final List<Diary> diaries1 = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user2", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user2", orphanRemoval = true)
     private final List<Diary> diaries2 = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private final List<DiaryDetail> diaryDetails = new ArrayList<>();
 
     public User setIntro(String intro, String imagePath) {

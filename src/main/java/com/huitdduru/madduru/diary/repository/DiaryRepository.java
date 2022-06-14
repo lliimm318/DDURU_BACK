@@ -12,7 +12,8 @@ import java.util.Optional;
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Integer> {
 
-    @Query(value = "select d from Diary d where (d.user1 = ?1 and d.user2 != ?1) or (d.user2 = ?1 and d.user1 != ?1)")
+    @Query(value = "select d from Diary d where (d.user1 = ?1 and (d.user2 != ?1 or d.user2 is null))" +
+            " or (d.user2 = ?1 and (d.user1 != ?1 or d.user1 is null))")
     List<Diary> findByUser1OrUser2(User user);
 
     Diary findByUser1AndUser2(User user1, User user2);

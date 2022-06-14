@@ -37,4 +37,9 @@ public class MyPageController {
     public MyInfoResponse queryMyInfo() {
         return mypageService.queryMyInfo();
     }
+
+    @GetMapping("/code")
+    public MyInfoResponse code() {
+        return mypageService.queryMyInfo();
+    }
 }

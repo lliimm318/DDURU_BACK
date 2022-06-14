@@ -6,6 +6,7 @@ import com.huitdduru.madduru.diary.payload.response.DiaryResponse;
 import com.huitdduru.madduru.diary.repository.DiaryDetailRepository;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
 import com.huitdduru.madduru.mypage.payload.request.MyInfoRequest;
+import com.huitdduru.madduru.mypage.payload.response.CodeResponse;
 import com.huitdduru.madduru.mypage.payload.response.MyInfoResponse;
 import com.huitdduru.madduru.security.auth.AuthenticationFacade;
 import com.huitdduru.madduru.user.entity.User;
@@ -78,7 +79,11 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public MyInfoResponse queryMyInfo() {
         User user = authenticationFacade.getUser();
-
         return MyInfoResponse.of(user);
+    }
+
+    @Override
+    public CodeResponse code() {
+        return new CodeResponse(authenticationFacade.getUser().getCode());
     }
 }

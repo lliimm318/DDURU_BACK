@@ -16,7 +16,7 @@ public class WebSocketConnectController {
     private final WaitingQueue waitingQueue;
 
     public void onConnect(SocketIOClient client) {
-        String token = client.getHandshakeData().getHttpHeaders().get("Authorization");
+        String token = client.getHandshakeData().getSingleUrlParam("Authorization");
         Authentication authentication = tokenProvider.getAuthentication(token);
         System.out.println(authentication.getName() + " 님이 연결되었습니다.");
         client.set(ClientProperty.USER_KEY, authentication.getName());

@@ -18,7 +18,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
 
     Diary findByUser1AndUser2(User user1, User user2);
 
-    @Query(value = "select d from Diary d where (d.user1 = ?1 and d.user2 != ?1) or (d.user2 = ?1 and d.user1 != ?1)")
+    @Query(value = "select d from Diary d where (d.relationContinues = true) and ((d.user1 = ?1 and d.user2 != ?1) or (d.user2 = ?1 and d.user1 != ?1))")
     Optional<Diary> findByUser1OrUser2AndRelationContinuesIsTrue(User user);
 
 }

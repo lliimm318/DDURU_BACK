@@ -5,17 +5,19 @@ import com.huitdduru.madduru.diary.entity.DiaryDetail;
 import com.huitdduru.madduru.diary.payload.response.DiaryResponse;
 import com.huitdduru.madduru.diary.repository.DiaryDetailRepository;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
-import com.huitdduru.madduru.mypage.payload.request.ImageUrlRequest;
 import com.huitdduru.madduru.mypage.payload.request.IntroRequest;
 import com.huitdduru.madduru.mypage.payload.request.MyInfoRequest;
 import com.huitdduru.madduru.mypage.payload.response.CodeResponse;
 import com.huitdduru.madduru.mypage.payload.response.MyInfoResponse;
+import com.huitdduru.madduru.s3.FileUploader;
 import com.huitdduru.madduru.security.auth.AuthenticationFacade;
 import com.huitdduru.madduru.user.entity.User;
 import com.huitdduru.madduru.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -29,6 +31,7 @@ public class MyPageServiceImpl implements MyPageService {
     private final AuthenticationFacade authenticationFacade;
     private final DiaryRepository diaryRepository;
     private final DiaryDetailRepository diaryDetailRepository;
+    private final FileUploader fileUploader;
 
     @Override
     public void updateInfo(MyInfoRequest request) {
@@ -96,8 +99,14 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public void updateProfileImage(ImageUrlRequest request) {
+    public void updateProfileImage(MultipartFile image) throws IOException {
         User user = authenticationFacade.getUser();
-        userRepository.save(user.setImageUrl(request.getImageUrl()));
+
+        String imagePath = image != null ? fileUploader.uploadFile(image) : null;
+
+        if(user.getImagePath() != null)
+            fileUploader.removeFile(user.getImagePath());
+
+        userRepository.save(user.setImageUrl(imagePath));
     }
 }

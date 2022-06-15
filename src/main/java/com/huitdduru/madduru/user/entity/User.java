@@ -50,9 +50,13 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private final List<DiaryDetail> diaryDetails = new ArrayList<>();
 
-    public User setIntro(String intro, String imagePath) {
+    public User setIntro(String intro) {
         this.intro = intro;
-        this.imagePath = imagePath;
+        return this;
+    }
+
+    public User setImageUrl(String imageUrl) {
+        this.imagePath = imageUrl;
         return this;
     }
 
@@ -65,4 +69,9 @@ public class User {
         return this.getId().toString();
     }
 
+    public User setMyInfos(String intro, String imageUrl) {
+        this.intro = intro;
+        this.imagePath = imageUrl;
+        return this;
+    }
 }

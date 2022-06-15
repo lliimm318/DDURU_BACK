@@ -5,6 +5,8 @@ import com.huitdduru.madduru.diary.entity.DiaryDetail;
 import com.huitdduru.madduru.diary.payload.response.DiaryResponse;
 import com.huitdduru.madduru.diary.repository.DiaryDetailRepository;
 import com.huitdduru.madduru.diary.repository.DiaryRepository;
+import com.huitdduru.madduru.mypage.payload.request.ImageUrlRequest;
+import com.huitdduru.madduru.mypage.payload.request.IntroRequest;
 import com.huitdduru.madduru.mypage.payload.request.MyInfoRequest;
 import com.huitdduru.madduru.mypage.payload.response.CodeResponse;
 import com.huitdduru.madduru.mypage.payload.response.MyInfoResponse;
@@ -31,7 +33,7 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public void updateInfo(MyInfoRequest request) {
         User user = authenticationFacade.getUser()
-                .setIntro(request.getIntro(), request.getImageUrl());
+                .setMyInfos(request.getIntro(), request.getImageUrl());
         userRepository.save(user);
     }
 
@@ -85,5 +87,17 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public CodeResponse code() {
         return new CodeResponse(authenticationFacade.getUser().getCode());
+    }
+
+    @Override
+    public void updateIntroduction(IntroRequest request) {
+        User user = authenticationFacade.getUser();
+        userRepository.save(user.setIntro(request.getIntro()));
+    }
+
+    @Override
+    public void updateProfileImage(ImageUrlRequest request) {
+        User user = authenticationFacade.getUser();
+        userRepository.save(user.setImageUrl(request.getImageUrl()));
     }
 }

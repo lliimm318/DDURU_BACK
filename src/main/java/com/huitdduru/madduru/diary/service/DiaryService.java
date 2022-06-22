@@ -11,7 +11,7 @@ public interface DiaryService {
 
     void writeDiary(int diaryId, DiaryRequest diaryRequest);
 
-    List<DiaryListResponse> choronology();
+    List<DiaryListResponse> chronology();
 
     DetailListResponse diaryList(int diaryId);
 

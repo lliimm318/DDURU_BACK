@@ -45,7 +45,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public List<DiaryListResponse> choronology() {
+    public List<DiaryListResponse> chronology() {
         User user = authenticationFacade.getUser();
 
         List<Diary> diaryList = diaryRepository.findByUser1OrUser2(user);
@@ -67,7 +67,7 @@ public class DiaryServiceImpl implements DiaryService {
                         .build();
 
                 DiaryListResponse diaryListResponse = new DiaryListResponse();
-                diaryListResponse.setId(d.getId());
+                diaryListResponse.setId(d.getUser().getId());
                 diaryListResponse.setDiary(exchangeDiaryResponse);
                 diaryListResponse.setIsMine(false);
                 if (user==d.getUser()) diaryListResponse.setIsMine(true);
@@ -75,6 +75,7 @@ public class DiaryServiceImpl implements DiaryService {
                 responses.add(diaryListResponse);
             }
         }
+        responses.sort(Comparator.comparing(o -> o.getDiary().getCreatedAt()));
         return responses;
     }
 

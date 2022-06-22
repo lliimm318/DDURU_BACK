@@ -25,7 +25,7 @@ public class DiaryController {
 
     @GetMapping("/chronology")
     public List<DiaryListResponse> getChronology() {
-        return diaryService.choronology();
+        return diaryService.chronology();
     }
 
     @GetMapping("/{diaryId}/list")

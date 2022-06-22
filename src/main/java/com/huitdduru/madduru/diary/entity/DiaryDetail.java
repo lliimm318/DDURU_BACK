@@ -1,10 +1,12 @@
 package com.huitdduru.madduru.diary.entity;
 
 import com.huitdduru.madduru.user.entity.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Table(name = "diary_detail")
@@ -44,5 +46,7 @@ public class DiaryDetail {
 
     @Column(name = "image_path")
     private String imagePath;
+
+
 
 }
